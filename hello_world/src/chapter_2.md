@@ -42,7 +42,7 @@ Here, : `f64` after the variable name specifies that `warp_factor` will hold a 6
 One of Rust's core principles is immutability by default. This means that once you assign a value to a variable using `let`, you cannot change that value later in your program, unless you explicitly allow it. Think of this as a Starfleet directive – once a system is set, it generally remains that way for stability and predictability.
 
 Let's see what happens if we try to change the value of starship_name from our first example:
-Rust
+
 
 ```rust, editable
 fn main() {
@@ -53,12 +53,14 @@ fn main() {
 ```
 
 If you uncomment the line starship_name = "USS Voyager"; and try to compile this code, the Rust compiler will issue an error message. This error tells you that you cannot assign a new value to an immutable variable. This design choice in Rust helps prevent unexpected side effects and makes your code easier to reason about.
-Making Variables Mutable with mut: Reassigning Crew as Needed
+
+
+### Making Variables Mutable with mut:  Reassigning Crew as Needed
 
 Of course, there are times when you need a variable's value to change. In such cases, you can use the mut keyword when declaring the variable. This is like getting authorization to reassign a crew member to a different station when the situation demands it.
 
 Here's how you can declare a mutable variable:
-Rust
+
 
 ```rust, editable
 fn main() {
@@ -78,7 +80,7 @@ Rust allows you to declare a new variable with the same name as a previous varia
 
 
 Here's an example:
-Rust
+
 
 ```rust, editable
 fn main() {
@@ -107,11 +109,12 @@ fn main() {
 }
 ```
 
-Here, const SPEED_OF_LIGHT: u32 = 299_792_458; declares a constant named SPEED_OF_LIGHT of type u32 (an unsigned 32-bit integer) and assigns it the value 299,792,458. Constants are typically declared in uppercase with underscores between words for readability and are often used for values that will never change throughout the program's execution.
-Starfleet Analogy Recap
+Here, const SPEED_OF_LIGHT: u32 = 299,792,458; declares a constant named SPEED_OF_LIGHT of type u32 (an unsigned 32-bit integer) and assigns it the value 299,792,458. Constants are typically declared in uppercase with underscores between words for readability and are often used for values that will never change throughout the program's execution.
 
- -   let: Assigning a crew member to a station.
+### Starfleet Analogy Recap
+
+ -   `let`: Assigning a crew member to a station.
  -   Immutability by Default: Starfleet directives ensuring system stability.
- -   mut: Getting authorization to reassign a crew member when necessary.
+ -   `mut`: Getting authorization to reassign a crew member when necessary.
  -   Shadowing: Temporarily redefining a designation for a specific task.
- -   const: The fundamental, unchanging laws governing the universe (or your program).
+ -   `const`: The fundamental, unchanging laws governing the universe (or your program).

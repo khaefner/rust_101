@@ -1,4 +1,5 @@
-# Chapter 1: Welcome Aboard the Rust Starfleet Academy
+
+# Chapter 1: Welcome Aboard the Rust Starfleet Academy 
 
 Welcome, cadets! You've embarked on an exciting journey to master the Rust programming language, a powerful tool that will serve you well in the vast expanse of software development. Here at Starfleet Academy, we believe that even the most complex technologies can be learned with dedication and a bit of fun. Our mission for the next hour? To explore the fundamentals of Rust through the lens of the United Federation of Planets and its incredible starfaring technology.
 
@@ -6,7 +7,7 @@ Think of Rust as the core engineering principle behind our starships – reliabl
 
 This first chapter will lay the groundwork for your journey. We'll start by ensuring you have the necessary tools in your toolkit, much like a Starfleet engineer needs their trusty tricorder. We'll cover compiling your first Rust program and introduce you to Cargo, our standard Starfleet build and dependency management system.
 
-## Setting Up Your Starfleet Engineering Station
+## ![logo](Star_Trek_icon.png) Setting Up Your Starfleet Engineering Station  
 
 Before we can engage our first program, we need to ensure your personal workstation (your computer) is equipped with the Rust toolchain. Think of this as setting up your dedicated engineering console.
 
@@ -30,7 +31,7 @@ Before we can engage our first program, we need to ensure your personal workstat
 
     If you see version numbers for both `rustc` and `cargo`, congratulations! Your Starfleet engineering station is ready for its first mission.
 
-## Our First Program: A Simple Federation Greeting
+##  ![logo](Star_Trek_icon.png) Our First Program: A Simple Federation Greeting
 
 Let's write a simple program to ensure everything is working as expected. We'll create a program that displays a classic Federation greeting.
 
@@ -51,7 +52,7 @@ Let's write a simple program to ensure everything is working as expected. We'll 
 
 3.  **Saving the File:** Save the `hello_federation.rs` file in a location you can easily access through your terminal or command prompt.
 
-## Compiling with `rustc`: Engaging the Primary Systems
+## ![logo](Star_Trek_icon.png) Compiling with `rustc`: Engaging the Primary Systems
 
 Now that we have our source code, we need to compile it into an executable program that your computer can understand. We'll use the Rust compiler, `rustc`, for this initial step.
 
@@ -93,7 +94,7 @@ Now that we have our source code, we need to compile it into an executable progr
 
     Congratulations, cadet! You have successfully written, compiled, and run your first Rust program. You've engaged the primary systems and received a clear signal!
 
-## Introducing Cargo: The Starfleet Standard Build System
+## ![logo](Star_Trek_icon.png) Introducing Cargo: The Starfleet Standard Build System
 
 While `rustc` is perfectly capable of compiling single-file Rust programs, as our projects become more complex (think of the intricate systems of a Galaxy-class starship), we'll need a more sophisticated way to manage our code, dependencies (external libraries), and build process. This is where Cargo comes in.
 
@@ -106,7 +107,7 @@ Cargo is Rust's build system and package manager. It handles many tasks for you,
 
 Think of Cargo as the central command and control system for your Rust projects, ensuring everything is organized and runs smoothly.
 
-## Creating a New Cargo Project: Launching a New Mission
+## ![logo](Star_Trek_icon.png) Creating a New Cargo Project: Launching a New Mission
 
 Let's create our first project using Cargo.
 
@@ -152,7 +153,7 @@ Let's create our first project using Cargo.
 
     Cargo automatically generates this basic program for you when you create a new project.
 
-## Building with Cargo: Engaging Warp Drive
+## ![logo](Star_Trek_icon.png) Building with Cargo: Engaging Warp Drive
 
 Now, let's use Cargo to build our project.
 
@@ -173,7 +174,7 @@ Now, let's use Cargo to build our project.
 
     Cargo has created a new directory named `target` in your project's root directory. Inside the `target` directory, you'll find a `debug` subdirectory, and within that, the compiled executable file (named `federation_mission` on Linux/macOS or `federation_mission.exe` on Windows).
 
-## Running with Cargo: Executing the Mission
+## ![logo](Star_Trek_icon.png) Running with Cargo: Executing the Mission
 
 Cargo also provides a convenient command to build and run your project in a single step.
 
@@ -196,7 +197,7 @@ Cargo also provides a convenient command to build and run your project in a sing
 
     As you can see, Cargo handled both the compilation and execution, making the process much smoother.
 
-## The `Cargo.toml` File: The Mission Manifest
+## ![logo](Star_Trek_icon.png) The `Cargo.toml` File: The Mission Manifest
 
 Let's take a closer look at the `Cargo.toml` file in your `federation_mission` project. Open this file in your text editor. You'll see something like this:
 
