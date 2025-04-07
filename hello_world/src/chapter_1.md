@@ -1,5 +1,7 @@
 
-# Chapter 1: Welcome Aboard the Rust Starfleet Academy 
+# Chapter 1: 
+## Welcome Aboard the Rust Starfleet Academy 
+![logo](Line_Header_Star_Trek.png) 
 
 Welcome, cadets! You've embarked on an exciting journey to master the Rust programming language, a powerful tool that will serve you well in the vast expanse of software development. Here at Starfleet Academy, we believe that even the most complex technologies can be learned with dedication and a bit of fun. Our mission for the next hour? To explore the fundamentals of Rust through the lens of the United Federation of Planets and its incredible starfaring technology.
 

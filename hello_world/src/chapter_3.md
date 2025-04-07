@@ -1,8 +1,9 @@
 ## Chapter 3: Ownership Protocols: Ensuring Resource Integrity in the Galaxy
+![logo](Line_Header_Star_Trek.png)
 
 Welcome, cadets, to a crucial chapter in your Rust training: understanding the principles of ownership and borrowing. These concepts are fundamental to Rust's ability to manage memory safely and efficiently without the need for a garbage collector. Think of ownership as the set of protocols that govern how resources (like data) are managed within our Starfleet systems, ensuring that everything is accounted for and nothing is inadvertently lost or corrupted.
 
-### What is Ownership? The Captain's Responsibility
+### ![logo](Star_Trek_icon.png) What is Ownership? The Captain's Responsibility
 
 In Rust, every value in your program has a variable that's called its *owner*. This is like the captain of a starship being responsible for everything aboard. The ownership system has three core rules:
 
@@ -10,7 +11,7 @@ In Rust, every value in your program has a variable that's called its *owner*. T
 2.  **There can only be one owner of a value at a time.** Just as a starship can typically only have one commanding officer at any given moment, a piece of data in Rust can only have one variable that has ultimate control over it.
 3.  **When the owner goes out of scope, the value will be dropped.** When the captain's command ends (e.g., they are relieved of duty), their responsibility for the ship is transferred. Similarly, when a variable's scope ends, the data it owns is automatically cleaned up (dropped) by Rust.
 
-### Scope: The Boundaries of a Starfleet Mission
+### ![logo](Star_Trek_icon.png) Scope: The Boundaries of a Starfleet Mission
 
 Before we dive deeper into ownership, let's understand the concept of *scope*. In Rust, scope is the region of your code where a variable is valid and can be used. Scope is typically defined by curly braces `{}`. Think of scope as the boundaries of a specific Starfleet mission or a particular section of code.
 
@@ -81,7 +82,7 @@ fn main() {
 
 In this example, both warp_speed1 and warp_speed2 are valid and hold the value 8. This is because integers have a fixed size and copying them is inexpensive. Think of this like using a transporter to create an exact duplicate of a small item.
 
-### Borrowing: Temporary Access with Permissions
+### ![logo](Star_Trek_icon.png) Borrowing: Temporary Access with Permissions
 
 Often, we want to access data without taking ownership of it. This is where borrowing comes in. Borrowing allows you to create references that point to a value but do not own it. Think of borrowing as granting temporary access to a Starfleet resource with specific permissions.
 References: Pointing to Starfleet Locations
@@ -98,7 +99,7 @@ Rust enforces two key rules about references to prevent data races (when multipl
 
 
 
-### Immutable References: Reading the Ship's Logs
+### ![logo](Star_Trek_icon.png) Immutable References: Reading the Ship's Logs
 
 Let's see an example of an immutable reference:
 Rust
@@ -115,7 +116,7 @@ fn main() {
 
 Here, &starship_name creates an immutable reference to the String owned by starship_name. We can use reference_to_name to access the value, but we cannot modify it. Importantly, the ownership of the String remains with starship_name, and it is still valid after the reference is created. Think of this as accessing the ship's logs – you can read the information, but you can't change the historical records.
 
-### Mutable References: Modifying System Parameters
+### ![logo](Star_Trek_icon.png) Mutable References: Modifying System Parameters
 
 To modify a value through a reference, you need to create a mutable reference using &mut.
 
@@ -132,7 +133,7 @@ fn main() {
 
 In this example, &mut power_level creates a mutable reference to the power_level variable. To modify the value that the reference points to, we use the dereference operator *. The crucial rule here is that you can only have one mutable reference to a particular piece of data at a time within the same scope. This prevents multiple parts of your code from trying to modify the same data simultaneously, leading to unpredictable behavior. Think of this as having exclusive access to a critical system parameter to make adjustments.
 
-### Dangling References: Avoiding Temporal Anomalies
+### ![logo](Star_Trek_icon.png) Dangling References: Avoiding Temporal Anomalies
 
 Rust's borrow checker (the part of the compiler that enforces the rules of borrowing) prevents you from creating dangling references – references that point to a memory location that no longer contains valid data. This is akin to avoiding temporal anomalies that could disrupt the space-time continuum.
 
@@ -152,7 +153,7 @@ Rust's borrow checker (the part of the compiler that enforces the rules of borro
 
 In the commented-out code, the function create_reference creates a String named s and then returns a reference to it. However, when create_reference ends, s goes out of scope and its memory is dropped. The reference returned would then be pointing to invalid memory, which Rust prevents at compile time.
 
-### Ownership and Functions: Passing Control to Away Teams
+### ![logo](Star_Trek_icon.png) Ownership and Functions: Passing Control to Away Teams
 
 When you pass a value to a function, the ownership rules apply.
 
