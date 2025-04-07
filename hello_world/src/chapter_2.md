@@ -54,7 +54,7 @@ fn main() {
 }
 ```
 
-If you uncomment the line starship_name = "USS Voyager"; and try to compile this code, the Rust compiler will issue an error message. This error tells you that you cannot assign a new value to an immutable variable. This design choice in Rust helps prevent unexpected side effects and makes your code easier to reason about.
+If you uncomment the line `starship_name = "USS Voyager"`; and try to compile this code, the Rust compiler will issue an error message. This error tells you that you cannot assign a new value to an immutable variable. This design choice in Rust helps prevent unexpected side effects and makes your code easier to reason about.
 
 
 ### ![logo](Star_Trek_icon.png) Making Variables Mutable with mut:  Reassigning Crew as Needed
@@ -74,7 +74,7 @@ fn main() {
 }
 ```
 
-In this example, let mut indicates that shield_strength is a mutable variable. We first assign it the integer value 50. Later in the main function, we can reassign it to the value 80 without any compiler errors. Remember to use mutability judiciously, favoring immutability for safer and more predictable code.
+In this example, let mut indicates that `shield_strength` is a mutable variable. We first assign it the integer value 50. Later in the main function, we can reassign it to the value 80 without any compiler errors. Remember to use mutability judiciously, favoring immutability for safer and more predictable code.
 
 ### ![logo](Star_Trek_icon.png) Shadowing: Temporarily Redefining a Designation
 
