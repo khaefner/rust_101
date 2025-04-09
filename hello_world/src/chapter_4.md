@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="star.css">
+
 ## Chapter 4: Error Handling Protocols: Navigating the Unexpected
 ![logo](Line_Header_Star_Trek.png)
 

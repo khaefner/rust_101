@@ -1,9 +1,11 @@
+<link rel="stylesheet" href="star.css">
+
 ## Chapter 5: Defining Starfleet Structures and Classifications
 ![logo](Line_Header_Star_Trek.png)
 
 Welcome back, cadets! In this chapter, we'll delve into the creation of custom data types in Rust using two powerful tools: structs and enums. Think of structs as blueprints for our Starfleet vessels, allowing us to group together related information. Enums, on the other hand, are like the classifications we use to categorize different types of ships or the various operational states they can be in. Mastering these concepts will enable us to model complex systems within our Rust programs with clarity and precision.
 
-### Structs: Creating Starship Blueprints
+### ![logo](Star_Trek_icon.png) Structs: Creating Starship Blueprints
 
 Structs (short for "structures") are a way to group together multiple values of different types under a single name. They allow you to create your own custom types that represent real-world entities, like a starship. Think of a struct as a blueprint that defines the properties or fields of a starship.
 
@@ -62,7 +64,7 @@ fn main() {
     }
 }
 ```
-Tuple Structs
+### ![logo](Star_Trek_icon.png) Tuple Structs
 
 Rust also provides a variation called tuple structs, which are like named tuples. They don't have named fields; instead, you access their elements by index.  
 
@@ -94,7 +96,7 @@ fn main() {
     // Unit structs don't have any fields to access
 }
 ```
-Enums: Defining Starfleet States and Classifications
+### ![logo](Star_Trek_icon.png) Enums: Defining Starfleet States and Classifications
 
 Enums (short for "enumerations") allow you to define a type by enumerating its possible values. Think of enums as the different classifications of starships (e.g., Cruiser, Destroyer, Science Vessel) or the various operational states a ship can be in (e.g., Docked, InWarp, Alert).  
 
@@ -126,7 +128,7 @@ In this code:
     The values within the curly braces are called variants. Here, Cruiser, Destroyer, ScienceVessel, Freighter, and Shuttle are the possible values that a variable of type StarshipClass can hold.
     We access enum variants using the double colon :: (e.g., StarshipClass::Cruiser).
 
-Enums with Data
+### ![logo](Star_Trek_icon.png) Enums with Data
 
 A powerful feature of Rust enums is that they can hold data within their variants. This allows you to associate different kinds of data with each possible value of the enum.
 
@@ -159,7 +161,7 @@ Here, our ShipStatus enum can represent different states:
     Docked is a variant that holds a struct-like data structure with a named field at_starbase of type String.
     Alert is a variant that holds a String representing the alert level.
 
-Using match with Enums
+### ![logo](Star_Trek_icon.png) Using match with Enums
 
 Enums are often used with the match control flow construct, which allows you to execute different code based on the specific variant of the enum.
 
@@ -183,10 +185,11 @@ fn main() {
 }
 
 The match expression in report_status checks the variant of the status enum and executes the corresponding code block. Notice how we can destructure the data associated with the Warping and Docked variants to access their values.
-Methods on Structs and Enums: Giving Starships and States Functionality
+
+### ![logo](Star_Trek_icon.png) Methods on Structs and Enums: Giving Starships and States Functionality
 
 We can define methods (functions associated with a specific type) on both structs and enums using the impl (implementation) keyword. This allows us to add behavior to our custom data types.
-Methods on Structs
+#### Methods on Structs
 
 ```rust, editable
 impl Starship {
@@ -198,7 +201,7 @@ impl Starship {
         self.warp_capable && self.crew_capacity > 0
     }
 }
-```
+
 fn main() {
     let defiant = Starship {
         name: String::from("USS Defiant"),
@@ -212,8 +215,9 @@ fn main() {
     println!("Is the ship ready? {}", defiant.is_ready());
 }
 ```
-In the impl Starship block, we define two methods: describe and is_ready. The &self parameter in the describe method is a reference to the instance of the Starship struct on which the method is being called. The is_ready method returns a boolean value based on the warp_capable and crew_capacity fields.
-Methods on Enums
+In the `impl Starship` block, we define two methods: describe and is_ready. The `&self` parameter in the describe method is a reference to the instance of the Starship struct on which the method is being called. The `is_ready` method returns a boolean value based on the warp_capable and crew_capacity fields.
+
+### ![logo](Star_Trek_icon.png) Methods on Enums
 
 ```rust, editable
 impl ShipStatus {

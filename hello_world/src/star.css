@@ -1,0 +1,83 @@
+
+.warning-block {
+  border: 2px solid #FFA500; /* Solid orange border for visibility, adjust color as needed */
+  border-radius: 8px;
+  background-color: rgba(255, 255, 0, 0.3); /* Semi-transparent yellow: R, G, B, Alpha (0.0 to 1.0) */
+  padding: 15px;
+  margin-bottom: 15px; /* Add some space below the block */
+  display: flex; /* To align image and text horizontally */
+  align-items: center; /* Vertically align items in the flex container */
+}
+
+.warning-icon {
+  margin-right: 10px; /* Space between the icon and text */
+  /*width: 199px;  Adjust the size as needed */
+  /*height: 56px;  Adjust the size as needed */
+}
+
+.warning-text {
+  /* You can add additional styling for the text here if needed */
+}
+
+.discovery-details {
+  margin-bottom: 15px;
+  border: 1px solid rgb(145, 99, 2); /* Light blue border */
+  border-radius: 8px;
+  /* background-color: rgba(2, 0, 0, 0.8);  Semi-transparent dark background */
+  /*color: #E0F7FA; /* Light cyan text */
+  padding: 10px;
+}
+
+.discovery-summary {
+  background-color: rgba(222, 226, 230, 0.2);  /*Light blue transparent background */
+  /*color: #64B5F6;*/
+  padding: 10px 15px;
+  cursor: pointer;
+  font-family: sans-serif;
+  font-weight: bold;
+  border-radius: 5px;
+  border: 1px solid #64B5F6;
+  position: relative;
+  padding-left: 35px; /* Make space for the image */
+}
+
+.info-closed {
+  position: absolute;
+  left: 5px;
+  transform: translateY(-50%);
+  display: inline-block;
+  width: 50px; /* Adjust size as needed */
+  height: 86px; /* Adjust size as needed */
+  background-color: rgba(222, 226, 230, 0.2);  /*Light blue transparent background */
+}
+
+.info-open {
+  position: absolute;
+  left: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: none;
+  width: 50px; /* Adjust size as needed */
+  height: 86px; /* Adjust size as needed */
+}
+
+details[open] .info-closed {
+  display: none;
+}
+
+details[open] .info-open {
+  display: inline-block;
+}
+
+.discovery-content {
+  /*background-color: rgba(222, 226, 230, 0);  Light blue transparent background */
+  padding: 15px;
+  font-family: monospace;
+  border-top: 1px solid #64B5F6; /* Subtle separator */
+  margin-top: 5px;
+  /*color:rgb(0, 0, 0);  Light cyan text */
+}
+
+code {
+    white-space : pre-wrap !important;
+  }

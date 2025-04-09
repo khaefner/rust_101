@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="star.css">
+
 # Chapter 7 Basic DNS Server
 
 

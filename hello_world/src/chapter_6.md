@@ -1,4 +1,6 @@
-## Chapter 6: Engaging External Resources: Exploring the Rust Ecosystem
+<link rel="stylesheet" href="star.css">
+
+# Chapter 6: Engaging External Resources: Exploring the Rust Ecosystem
 ![logo](Line_Header_Star_Trek.png)
 
 Welcome, cadets, to our final chapter! Just as Starfleet vessels often rely on support from starbases, utilize advanced Federation technology, and collaborate with other ships, our Rust programs can leverage the vast ecosystem of libraries and tools available. In this chapter, we'll explore how to import external code, get an overview of the Rust ecosystem, understand Cargo (our Starfleet-standard package manager), and discover some popular resources that can enhance your Rust development capabilities.

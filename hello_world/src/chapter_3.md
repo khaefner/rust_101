@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="star.css">
+
 ## Chapter 3: Ownership Protocols: Ensuring Resource Integrity in the Galaxy
 ![logo](Line_Header_Star_Trek.png)
 
@@ -30,8 +32,9 @@ fn main() {
 ```
 
 
-In this example, the variable planet is declared in the outer scope of the main function. The variable greeting is declared within an inner block defined by curly braces. When the inner block ends, greeting goes out of scope and cannot be accessed anymore. However, planet, being in the outer scope, remains valid until the end of the main function.
-String Data and Ownership: The Starfleet Database
+In this example, the variable `planet` is declared in the outer scope of the main function. The variable `greeting` is declared within an inner block defined by curly braces. When the inner block ends, greeting goes out of scope and cannot be accessed anymore. However, `planet`, being in the outer scope, remains valid until the end of the main function.
+
+### ![logo](Star_Trek_icon.png) String Data and Ownership: The Starfleet Database
 
 Now, let's consider a more complex data type: String. Unlike simple scalar types like integers, which have a fixed size known at compile time, String can grow and shrink, meaning its size is not fixed and its data is stored on the heap (think of the ship's database, which can expand as needed).
 
@@ -48,8 +51,9 @@ fn main() {
 } // 'starship' goes out of scope and the memory is freed
 ```
 
-When starship goes out of scope at the end of main, Rust automatically calls the drop function for this String. This function is responsible for freeing up the memory that the String was using on the heap, preventing memory leaks.
-Move: Transferring Command
+When `starship` goes out of scope at the end of main, Rust automatically calls the drop function for this String. This function is responsible for freeing up the memory that the String was using on the heap, preventing memory leaks.
+
+### ![logo](Star_Trek_icon.png) Move: Transferring Command
 
 What happens when we assign the value of one String variable to another?
 
@@ -57,15 +61,17 @@ What happens when we assign the value of one String variable to another?
 ```rust, editable
 fn main() {
     let starship1 = String::from("Discovery");
-    let starship2 = starship1; // Ownership of the data in 'starship1' is moved to 'starship2'
+    // Ownership of the data in 'starship1' is moved to 'starship2'
+    let starship2 = starship1; 
 
     // println!("First starship: {}", starship1); // This would cause a compile error!
     println!("Second starship: {}", starship2);
 }
 ```
 
-In this case, when we assign starship1 to starship2, Rust doesn't create a deep copy of the data on the heap. Instead, it performs a move. The ownership of the underlying data is transferred from starship1 to starship2. After the move, starship1 is no longer considered valid. Trying to use starship1 after the move will result in a compile-time error, preventing a double free error (where the same memory is freed twice, leading to potential crashes). Think of this as transferring command of the starship – once the new captain takes over, the previous captain is no longer in command.
-Copy: Duplicating Data in the Transporter
+In this case, when we assign `starship1` to `starship2`, Rust doesn't create a deep copy of the data on the heap. Instead, it performs a move. The ownership of the underlying data is transferred from starship1 to `starship2`. After the move, `starship1` is no longer considered valid. Trying to use `starship1` after the move will result in a compile-time error, preventing a double free error (where the same memory is freed twice, leading to potential crashes). Think of this as transferring command of the starship – once the new captain takes over, the previous captain is no longer in command.
+
+### ![logo](Star_Trek_icon.png) Copy: Duplicating Data in the Replicator
 
 Not all data types behave like String. Types that have a known size at compile time and are stored entirely on the stack (like integers, booleans, and characters) implement the Copy trait. When you assign a variable of a Copy type to another, the value is actually copied.
 
@@ -80,7 +86,7 @@ fn main() {
 }
 ```
 
-In this example, both warp_speed1 and warp_speed2 are valid and hold the value 8. This is because integers have a fixed size and copying them is inexpensive. Think of this like using a transporter to create an exact duplicate of a small item.
+In this example, both `warp_speed1` and `warp_speed2` are valid and hold the value 8. This is because integers have a fixed size and copying them is inexpensive. Think of this like using a replicator to create an exact duplicate of a small item.
 
 ### ![logo](Star_Trek_icon.png) Borrowing: Temporary Access with Permissions
 
@@ -89,13 +95,21 @@ References: Pointing to Starfleet Locations
 
 A reference is like a pointer in other languages, but Rust guarantees that references will always point to a valid value. There are two types of references:
 
-    Immutable References: These allow you to read the value but not modify it. They are created using the & symbol.
-    Mutable References: These allow you to modify the value. They are created using the &mut symbol.
+**Immutable References:** These allow you to read the value but not modify it. They are created using the & symbol.
+
+**Mutable References:** These allow you to modify the value. They are created using the &mut symbol.
 
 Rust enforces two key rules about references to prevent data races (when multiple parts of the code try to access or modify the same data at the same time in unpredictable ways):
 
+<div class="warning-block">
+  <img src="Yellow_Alert_Icon.png" alt="Yellow Alert Icon" class="warning-icon">
+  <p class="warning-text">
     At any given time, you can have either one mutable reference or any number of immutable references to a particular piece of data.
-    References must always be valid. 1 Rust ensures that you cannot have a reference that points to data that has been dropped.   
+References must/will always be valid. Rust ensures that you cannot have a reference that points to data that has been dropped. 
+  </p>
+</div>
+
+  
 
 
 
@@ -114,11 +128,11 @@ fn main() {
 }
 ```
 
-Here, &starship_name creates an immutable reference to the String owned by starship_name. We can use reference_to_name to access the value, but we cannot modify it. Importantly, the ownership of the String remains with starship_name, and it is still valid after the reference is created. Think of this as accessing the ship's logs – you can read the information, but you can't change the historical records.
+Here, `&starship_nam`e creates an immutable reference to the String owned by `starship_name`. We can use `reference_to_name` to access the value, but we cannot modify it. Importantly, the ownership of the String remains with `starship_name`, and it is still valid after the reference is created. Think of this as accessing the ship's logs – you can read the information, but you can't change the historical records.
 
 ### ![logo](Star_Trek_icon.png) Mutable References: Modifying System Parameters
 
-To modify a value through a reference, you need to create a mutable reference using &mut.
+To modify a value through a reference, you need to create a mutable reference using `&mut`.
 
 ```rust, editable
 fn main() {
@@ -131,7 +145,7 @@ fn main() {
 }
 ```
 
-In this example, &mut power_level creates a mutable reference to the power_level variable. To modify the value that the reference points to, we use the dereference operator *. The crucial rule here is that you can only have one mutable reference to a particular piece of data at a time within the same scope. This prevents multiple parts of your code from trying to modify the same data simultaneously, leading to unpredictable behavior. Think of this as having exclusive access to a critical system parameter to make adjustments.
+In this example, `&mut power_level` creates a mutable reference to the `power_level` variable. To modify the value that the reference points to, we use the dereference operator `*`. The crucial rule here is that you can only have one mutable reference to a particular piece of data at a time within the same scope. This prevents multiple parts of your code from trying to modify the same data simultaneously, leading to unpredictable behavior. Think of this as having exclusive access to a critical system parameter to make adjustments.
 
 ### ![logo](Star_Trek_icon.png) Dangling References: Avoiding Temporal Anomalies
 
@@ -140,18 +154,35 @@ Rust's borrow checker (the part of the compiler that enforces the rules of borro
 
 ```rust, editable
 // This code will result in a compile error
-// fn create_reference() -> &String {
-//     let s = String::from("Data");
-//     &s // We are returning a reference to 's', which will be dropped when this function ends
-// }
+fn create_reference() -> &String {
+     let s = String::from("Data");
+     &s // We are returning a reference to 's', which will be dropped when this function ends
+ }
 
-// fn main() {
-//     let dangling_ref = create_reference();
-//     // dangling_ref will be invalid here
-// }
+fn main() {
+     let dangling_ref = create_reference();
+     // dangling_ref will be invalid here
+}
 ```
 
-In the commented-out code, the function create_reference creates a String named s and then returns a reference to it. However, when create_reference ends, s goes out of scope and its memory is dropped. The reference returned would then be pointing to invalid memory, which Rust prevents at compile time.
+In the above code, the function `create_reference` creates a String named `s` and then returns a reference to it. However, when `create_reference` ends, `s` goes out of scope and its memory is dropped. The reference returned would then be pointing to invalid memory, which Rust prevents at compile time.
+
+Now, let's look at how to call a function that takes a mutable reference.
+
+```rust, editable
+fn modify_starship_name(ship_name: &mut String, new_suffix: &str) {
+    ship_name.push_str(new_suffix);
+}
+
+fn main() {
+    let mut starship = String::from("USS Voyager");
+    println!("Original starship name: {}", starship);
+
+    modify_starship_name(&mut starship, "-A"); // Calling the function with a mutable reference
+
+    println!("Modified starship name: {}", starship);
+}
+```
 
 ### ![logo](Star_Trek_icon.png) Ownership and Functions: Passing Control to Away Teams
 
@@ -170,10 +201,11 @@ fn main() {
 }
 ```
 
-In this example, when starship_name is passed to take_ownership, its ownership is moved to the some_string parameter. As a result, starship_name is no longer valid in the main function after the function call.
+In this example, when `starship_name` is passed to `take_ownership`, its ownership is moved to the `some_string` parameter. As a result, `starship_name` is no longer valid in the main function after the function call.
 
 If you want a function to use a value without taking ownership, you can pass a reference:
-Rust
+
+
 ```rust, editable
 fn use_reference(some_string: &String) { // 'some_string' is a reference to a String
     println!("{} referenced", some_string);
@@ -187,11 +219,12 @@ fn main() {
 ```
 
 Here, we pass an immutable reference &starship_name to use_reference. This allows the function to access the String without taking ownership, so starship_name remains valid in main.
-Return Values and Ownership: Bringing Data Back to the Ship
+
+### ![logo](Star_Trek_icon.png) Return Values and Ownership: Bringing Data Back to the Ship
 
 Functions can also transfer ownership of values through their return values.
-Rust
 
+```rust, editable
 fn give_ownership() -> String { // This function will move its return value into the scope that calls it
     let some_string = String::from("Data to return");
     some_string // 'some_string' is moved out of the function
@@ -201,9 +234,11 @@ fn main() {
     let received_string = give_ownership(); // The return value's ownership is moved to 'received_string'
     println!("Received: {}", received_string);
 }
+```
 
-In this case, the give_ownership function creates a String and returns it. The ownership of this String is then moved to the received_string variable in the main function.
-Conclusion: Maintaining Order in the Galaxy of Data
+In this case, the `give_ownership` function creates a String and returns it. The ownership of this String is then moved to the `received_string` variable in the main function.
+
+### ![logo](Star_Trek_icon.png) Conclusion: Maintaining Order in the Galaxy of Data
 
 The concepts of ownership and borrowing are fundamental to writing safe and efficient Rust code. While they might seem a bit complex at first, understanding these rules is crucial for preventing common programming errors like dangling pointers and data races. By adhering to these "ownership protocols," we can ensure the integrity and reliability of our Starfleet-grade software. In the next chapter, we'll explore more fundamental data types and how they interact with the ownership system. Continue your training, cadet!
 
