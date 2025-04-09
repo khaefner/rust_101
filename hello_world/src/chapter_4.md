@@ -1,229 +1,243 @@
 <link rel="stylesheet" href="star.css">
 
-## Chapter 4: Error Handling Protocols: Navigating the Unexpected
+## Chapter 5: Defining Starfleet Structures and Classifications
 ![logo](Line_Header_Star_Trek.png)
 
-Welcome, cadets, to a critical aspect of starship operation and Rust programming: error handling. Just as a Starfleet crew must be prepared to deal with unexpected anomalies, system failures, or hostile encounters, our Rust programs need robust mechanisms to handle errors gracefully and prevent catastrophic failures. In this chapter, we'll explore Rust's approach to error handling, ensuring our code can navigate the unexpected with the same resilience as a starship venturing into uncharted space.
+Welcome back, cadets! In this chapter, we'll delve into the creation of custom data types in Rust using two powerful tools: structs and enums. Think of structs as blueprints for our Starfleet vessels, allowing us to group together related information. Enums, on the other hand, are like the classifications we use to categorize different types of ships or the various operational states they can be in. Mastering these concepts will enable us to model complex systems within our Rust programs with clarity and precision.
 
-### Unrecoverable Errors with `panic!`: Engaging Emergency Protocols
+### ![logo](Star_Trek_icon.png) Structs: Creating Starship Blueprints
 
-Sometimes, our programs encounter situations where recovery is impossible, and the best course of action is to immediately stop execution. In Rust, this is achieved using the `panic!` macro. Think of `panic!` as engaging the ship's emergency protocols – a last resort when a critical system fails beyond repair.
+Structs (short for "structures") are a way to group together multiple values of different types under a single name. They allow you to create your own custom types that represent real-world entities, like a starship. Think of a struct as a blueprint that defines the properties or fields of a starship.
 
-Here's a simple example of how `panic!` works:
-
-```rust, editable
-fn main() {
-    let warp_core_status = "critical overload";
-
-    if warp_core_status == "critical overload" {
-        panic!("Warp core breach imminent! Initiate emergency ejection sequence!");
-    }
-
-    println!("Warp core stable."); // This line will not be reached if a panic occurs
-}
-```
-
-In this code, we check the `warp_core_status`. If it's "critical overload," we invoke panic! with a descriptive message. When `panic!` is called, the program will print the panic message, unwind the stack (cleaning up resources), and then terminate. The message provided to `panic!` should be informative enough to understand the reason for the unrecoverable error.
-
-**When to use `panic!`:** Generally, you should only use panic! for truly unrecoverable errors or when a fundamental assumption in your code has been violated. For most errors that your program might encounter during normal operation (like a file not being found or a network connection failing), a more graceful approach is usually preferred.
-
-### Recoverable Errors with Result: Reporting Mission Failures
-
-For errors that our program can potentially recover from, Rust provides the Result enum. Think of Result as a detailed mission report – it either indicates success with a resulting value or failure with an error message. The Result enum is defined as follows:
+Here's how we can define a struct to represent a starship:
 
 ```rust, editable
-enum Result<T, E> {
-    Ok(T),    // Represents a successful operation with a value of type T
-    Err(E),   // Represents a failed operation with an error value of type E
+#[derive(Debug)]
+struct Starship {
+    name: String,
+    class: String,
+    registry: String,
+    warp_capable: bool,
+    crew_capacity: u32,
 }
 ```
-
-    Ok(T): This variant indicates that the operation was successful and holds the resulting value of type T.
-    Err(E): This variant indicates that the operation failed and holds an error value of type E. The E type is often used to represent the specific kind of error that occurred.
-
-Here's an example of a function that might return a Result:
-
-```rust, editable
-use std::fs::File;
-use std::io::ErrorKind;
-
-fn open_log_file(filename: &str) -> Result<File, std::io::Error> {
-    match File::open(filename) {
-        Ok(file) => Ok(file), // File opened successfully, return the File wrapped in Ok
-        Err(error) => match error.kind() {
-            ErrorKind::NotFound => {
-                // Log file not found, perhaps create it? For now, return the error
-                Err(error)
-            }
-            other_error => {
-                // Some other error occurred
-                Err(other_error)
-            }
-        },
-    }
-}
-
-fn main() {
-    match open_log_file("starship_log.txt") {
-        Ok(file) => println!("Successfully opened the log file."),
-        Err(error) => println!("Failed to open the log file: {:?}", error),
-    }
-}
-```
-
 In this code:
 
-    The open_log_file function attempts to open a file. It returns a Result where T is File (the type representing an opened file) and E is std::io::Error (a type representing I/O errors).
-    Inside the function, we use a match expression on the result of File::open(filename).
-    If File::open returns Ok(file), we wrap the file in Ok and return it.
-    If File::open returns Err(error), we further examine the kind of error. If it's a NotFound error, we could potentially try to create the file (though in this example, we simply return the error). For any other type of error, we also return the error wrapped in Err.
-    In the main function, we call open_log_file and use another match expression to handle the returned Result. If it's Ok, we print a success message. If it's Err, we print an error message (using {:?} to display the error for debugging).
+    struct Starship declares a new struct named Starship.
+    The curly braces {} enclose the definitions of the fields within the struct.
+    Each field has a name (e.g., name, class) and a type (e.g., String, bool, u32), separated by a colon.
+    #[derive(Debug)] is an attribute that automatically implements the Debug trait for our Starship struct. This allows us to easily print the struct's contents for debugging using the {:?} format specifier in println!.
 
-### Handling Result: Examining the Mission Report
-
-Rust provides several ways to handle Result values, allowing you to examine the outcome of an operation.
-match Statement: Detailed Analysis
-
-As seen in the previous example, the match statement is a powerful way to handle Result because it forces you to explicitly consider both the Ok and Err cases.
-if let: Concise Handling of Success or Failure
-
-If you're only interested in handling one of the Result variants (either Ok or Err) and want to ignore the other, you can use if let.
+Now that we have defined our Starship struct, we can create instances of it:
 
 ```rust, editable
 fn main() {
-    let log_file_result = open_log_file("starship_log.txt");
+    let enterprise = Starship {
+        name: String::from("USS Enterprise"),
+        class: String::from("Constitution"),
+        registry: String::from("NCC-1701"),
+        warp_capable: true,
+        crew_capacity: 203,
+    };
 
-    if let Ok(_file) = log_file_result {
-        println!("Log file opened successfully (using if let).");
-    } else if let Err(error) = log_file_result {
-        println!("Failed to open log file (using if let): {:?}", error);
+    println!("Behold the: {:?}", enterprise);
+}
+```
+Here, we create an instance of Starship named enterprise. We provide values for each field in the order they are defined in the struct, using the syntax field_name: value.
+
+We can access the individual fields of a struct instance using dot notation:
+
+```rust, editable
+fn main() {
+    let defiant = Starship {
+        name: String::from("USS Defiant"),
+        class: String::from("Defiant"),
+        registry: String::from("NX-74205"),
+        warp_capable: true,
+        crew_capacity: 50,
+    };
+
+    println!("The {} is a {} class vessel.", defiant.name, defiant.class);
+    println!("Registry number: {}", defiant.registry);
+    if defiant.warp_capable {
+        println!("Warp drive engaged!");
     }
 }
 ```
+### ![logo](Star_Trek_icon.png) Tuple Structs
 
-Here, if let Ok(_file) will only execute the code block if log_file_result is an Ok variant (we use _file to indicate that we are not actually using the File value in this case). Similarly, else if let Err(error) will execute its block only if the result is an Err variant, and it binds the error value to the error variable.
-unwrap(): Proceeding with Caution
-
-The Result type also has a method called unwrap(). If the Result is Ok, unwrap() will return the value inside Ok. However, if the Result is Err, unwrap() will cause your program to panic! with a generic error message.
-
-```rust, editable
-// Be cautious when using unwrap()!
-// fn main() {
-//     let log_file = open_log_file("starship_log.txt").unwrap();
-//     println!("Successfully opened the log file (using unwrap).");
-// }
-```
-
-Caution: Using unwrap() can lead to unexpected program termination if an error occurs. It's generally best to avoid unwrap() in production code and instead handle errors explicitly using match or if let. unwrap() can be useful for quick prototyping or in tests where you expect an operation to always succeed.
-expect(): Providing a Custom Panic Message
-
-Similar to unwrap(), the expect() method also returns the value inside Ok if the Result is successful. However, if the Result is Err, expect() will cause a panic! with a custom error message that you provide.
-
-```rust, editable
-// Use expect() to provide more context if a panic occurs
-// fn main() {
-//     let log_file = open_log_file("critical_system_log.txt")
-//         .expect("Failed to open the critical system log file!");
-//     println!("Successfully opened the critical system log file.");
-// }
-```
-expect() can be slightly better than unwrap() as it provides more context about why the program panicked, but it still leads to program termination in case of an error.
-
-### Propagating Errors: Reporting Up the Chain of Command
-
-Often, a function might encounter an error that it doesn't know how to handle directly. In such cases, it's useful to propagate the error up the call stack to the calling function, which might have more context to decide what to do. Rust provides the ? operator to make error propagation easier.
-
-```rust, editable
-use std::fs;
-use std::io;
-
-fn read_stardate_from_log(filename: &str) -> Result<String, io::Error> {
-    let content = fs::read_to_string(filename)?; // The '?' operator propagates the error
-    Ok(content)
-}
-
-fn process_log_file() -> Result<(), io::Error> {
-    let stardate = read_stardate_from_log("stardate_log.txt")?;
-    println!("Current stardate: {}", stardate);
-    Ok(())
-}
-
-fn main() -> Result<(), io::Error> {
-    process_log_file()?;
-    println!("Log processing complete.");
-    Ok(())
-}
-```
-
-
-Here's how the ? operator works:
-
-    If the Result value on which it's used is Ok, the ? operator will return the value inside Ok.
-    If the Result value is Err, the ? operator will return the Err value from the current function, effectively propagating the error up the call stack.
-
-Important: The ? operator can only be used in functions that themselves return a Result or Option (another type we might discuss later). In the main function, you can return a Result<(), E> to use the ? operator.
-
-In our example:
-
-    read_stardate_from_log reads the content of a file. If fs::read_to_string returns an Err, the ? operator will immediately return that Err from read_stardate_from_log. If it's Ok, the content is assigned to content.
-    Similarly, in process_log_file, if read_stardate_from_log returns an Err, that error is propagated up.
-    The main function also returns Result<(), io::Error>, allowing it to use the ? operator to handle potential errors from process_log_file.
-
-### Defining Custom Error Types: Creating Specific Mission Failure Reports
-
-For more complex applications, you might want to define your own custom error types to provide more specific information about the errors that can occur in your program. You can do this using enums or structs.
+Rust also provides a variation called tuple structs, which are like named tuples. They don't have named fields; instead, you access their elements by index.  
 
 
 ```rust, editable
 #[derive(Debug)]
-enum DataProcessingError {
-    InvalidFormat,
-    MissingField(String),
-    ChecksumMismatch,
-}
+struct Coordinates(f64, f64, f64); // Represents X, Y, Z coordinates
 
-fn process_sensor_data(data: &str) -> Result<String, DataProcessingError> {
-    if !data.starts_with("SENSOR:") {
-        return Err(DataProcessingError::InvalidFormat);
-    }
-    let parts: Vec<&str> = data.split(':').collect();
-    if parts.len() < 3 {
-        return Err(DataProcessingError::MissingField("value".to_string()));
-    }
-    // In a real scenario, we would perform more checks
-    if parts[1] == "ERROR" {
-        return Err(DataProcessingError::ChecksumMismatch);
-    }
-    Ok(format!("Processed: {}", data))
+fn main() {
+    let earth_coordinates = Coordinates(0.0, 0.0, 0.0);
+    println!("Earth's coordinates: {:?}", earth_coordinates);
+    println!("X-coordinate: {}", earth_coordinates.0);
+    println!("Y-coordinate: {}", earth_coordinates.1);
+    println!("Z-coordinate: {}", earth_coordinates.2);
+}
+```
+Tuple structs can be useful when you want to give a name to a tuple but don't necessarily need names for each individual element.
+Unit Structs
+
+Finally, Rust has unit structs, which don't have any fields at all. They are useful when you need to create a type that only represents a concept without holding any data.  
+
+
+```rust, editable
+struct PhotonTorpedo; // Represents a photon torpedo
+
+fn main() {
+    let torpedo = PhotonTorpedo;
+    println!("A photon torpedo has been launched.");
+    // Unit structs don't have any fields to access
+}
+```
+### ![logo](Star_Trek_icon.png) Enums: Defining Starfleet States and Classifications
+
+Enums (short for "enumerations") allow you to define a type by enumerating its possible values. Think of enums as the different classifications of starships (e.g., Cruiser, Destroyer, Science Vessel) or the various operational states a ship can be in (e.g., Docked, InWarp, Alert).  
+
+Here's how we can define an enum for starship classes:
+
+```rust, editable
+#[derive(Debug)]
+enum StarshipClass {
+    Cruiser,
+    Destroyer,
+    ScienceVessel,
+    Freighter,
+    Shuttle,
 }
 
 fn main() {
-    let result = process_sensor_data("SENSOR:OK:Reading=42");
-    match result {
-        Ok(output) => println!("Data processing successful: {}", output),
-        Err(error) => println!("Data processing failed: {:?}", error),
-    }
+    let enterprise_class = StarshipClass::Cruiser;
+    let defiant_class = StarshipClass::Destroyer;
+    let voyager_class = StarshipClass::ScienceVessel;
 
-    let result_fail = process_sensor_data("INVALID_DATA");
-    match result_fail {
-        Ok(output) => println!("Data processing successful: {}", output),
-        Err(error) => println!("Data processing failed: {:?}", error),
+    println!("Enterprise is a {:?}", enterprise_class);
+    println!("Defiant is a {:?}", defiant_class);
+    println!("Voyager is a {:?}", voyager_class);
+}
+```
+In this code:
+
+    enum StarshipClass declares a new enum named StarshipClass.
+    The values within the curly braces are called variants. Here, Cruiser, Destroyer, ScienceVessel, Freighter, and Shuttle are the possible values that a variable of type StarshipClass can hold.
+    We access enum variants using the double colon :: (e.g., StarshipClass::Cruiser).
+
+### ![logo](Star_Trek_icon.png) Enums with Data
+
+A powerful feature of Rust enums is that they can hold data within their variants. This allows you to associate different kinds of data with each possible value of the enum.
+
+```rust, editable
+#[derive(Debug)]
+enum ShipStatus {
+    Online,
+    Offline,
+    Warping(f64), // Variant holding a warp factor (f64)
+    Docked { at_starbase: String }, // Variant holding a named field
+    Alert(String), // Variant holding an alert level (String)
+}
+
+fn main() {
+    let ship1_status = ShipStatus::Online;
+    let ship2_status = ShipStatus::Warping(9.9);
+    let ship3_status = ShipStatus::Docked { at_starbase: String::from("Deep Space 9") };
+    let ship4_status = ShipStatus::Alert(String::from("Red Alert"));
+
+    println!("Ship 1 status: {:?}", ship1_status);
+    println!("Ship 2 status: {:?}", ship2_status);
+    println!("Ship 3 status: {:?}", ship3_status);
+    println!("Ship 4 status: {:?}", ship4_status);
+}
+```
+Here, our ShipStatus enum can represent different states:
+
+    Online and Offline are simple variants without any associated data.
+    Warping is a variant that holds a f64 value representing the warp factor.
+    Docked is a variant that holds a struct-like data structure with a named field at_starbase of type String.
+    Alert is a variant that holds a String representing the alert level.
+
+### ![logo](Star_Trek_icon.png) Using match with Enums
+
+Enums are often used with the match control flow construct, which allows you to execute different code based on the specific variant of the enum.
+
+```rust, editable
+fn report_status(status: &ShipStatus) {
+    match status {
+        ShipStatus::Online => println!("Ship is online and operational."),
+        ShipStatus::Offline => println!("Ship is currently offline."),
+        ShipStatus::Warping(factor) => println!("Ship is warping at factor {}.", factor),
+        ShipStatus::Docked { at_starbase } => println!("Ship is docked at {}.", at_starbase),
+        ShipStatus::Alert(level) => println!("Ship is under {}!", level),
     }
 }
 ```
+fn main() {
+    let ship_status = ShipStatus::Warping(7.5);
+    report_status(&ship_status);
 
-In this example, we define an enum DataProcessingError with different variants representing specific errors that can occur during data processing. Our process_sensor_data function now returns a Result with our custom error type. This allows for more precise error handling in the main function. The #[derive(Debug)] attribute allows us to easily print the error for debugging purposes.
-The Error Trait: Standardizing Error Reporting
+    let another_status = ShipStatus::Docked { at_starbase: String::from("Earth Spacedock") };
+    report_status(&another_status);
+}
 
-Rust's standard library provides the std::error::Error trait, which is a trait that error types should implement to provide a standard way of working with errors. Implementing this trait allows you to access more information about an error, such as its source (if it was caused by another error). For our simple examples, deriving Debug on our custom error types is often sufficient.
-Best Practices for Error Handling: Starfleet Standard Procedures
+The match expression in report_status checks the variant of the status enum and executes the corresponding code block. Notice how we can destructure the data associated with the Warping and Docked variants to access their values.
 
-    Prefer Result for recoverable errors: Use Result to signal that an operation might fail in a way that the calling code can handle.
-    Use panic! sparingly for truly unrecoverable errors: Reserve panic! for situations where continuing execution would lead to unsafe or incorrect behavior.
-    Provide informative error messages: Whether you're using panic! or the Err variant of Result, make sure the error message is clear and helpful for debugging.
-    Handle errors explicitly: Avoid excessive use of unwrap() or expect() in production code. Instead, use match, if let, or the ? operator to handle errors gracefully.
-    Consider defining custom error types: For complex applications, custom error types can provide more context and make error handling more precise.
+### ![logo](Star_Trek_icon.png) Methods on Structs and Enums: Giving Starships and States Functionality
 
-### Conclusion: Ensuring Mission Success Through Proper Error Handling
+We can define methods (functions associated with a specific type) on both structs and enums using the impl (implementation) keyword. This allows us to add behavior to our custom data types.
+#### Methods on Structs
 
-Mastering error handling is essential for writing robust and reliable Rust programs, just as having well-defined emergency protocols is crucial for the safety of a starship and its crew. By understanding and utilizing panic! for unrecoverable errors and Result for recoverable ones, along with the various ways to handle Result values, you'll be well-equipped to navigate the unexpected challenges that arise in the vast universe of software development. Continue to practice these techniques, and your code will be as resilient as any Starfleet vessel!
+```rust, editable
+impl Starship {
+    fn describe(&self) {
+        println!("This is the {} class vessel '{}' with registry {}.", self.class, self.name, self.registry);
+    }
+
+    fn is_ready(&self) -> bool {
+        self.warp_capable && self.crew_capacity > 0
+    }
+}
+
+fn main() {
+    let defiant = Starship {
+        name: String::from("USS Defiant"),
+        class: String::from("Defiant"),
+        registry: String::from("NX-74205"),
+        warp_capable: true,
+        crew_capacity: 50,
+    };
+
+    defiant.describe();
+    println!("Is the ship ready? {}", defiant.is_ready());
+}
+```
+In the `impl Starship` block, we define two methods: describe and is_ready. The `&self` parameter in the describe method is a reference to the instance of the Starship struct on which the method is being called. The `is_ready` method returns a boolean value based on the warp_capable and crew_capacity fields.
+
+### ![logo](Star_Trek_icon.png) Methods on Enums
+
+```rust, editable
+impl ShipStatus {
+    fn can_engage_warp(&self) -> bool {
+        match self {
+            ShipStatus::Warping(_) | ShipStatus::Online => true,
+            _ => false,
+        }
+    }
+}
+
+fn main() {
+    let status1 = ShipStatus::Online;
+    let status2 = ShipStatus::Docked { at_starbase: String::from("Jupiter Station") };
+
+    println!("Can ship 1 engage warp? {}", status1.can_engage_warp());
+    println!("Can ship 2 engage warp? {}", status2.can_engage_warp());
+}
+```
+Here, we define a method can_engage_warp on the ShipStatus enum. It uses a match expression to determine if the current status allows warp travel.
+Conclusion: Building Blocks of the Federation Fleet
+
+Structs and enums are fundamental building blocks in Rust, allowing us to create well-organized and meaningful data structures that accurately represent the entities and states within our programs. By using structs, we can define the properties of complex objects like starships, and with enums, we can represent a finite set of possible values or states. Combined with methods, these constructs enable us to model the behavior of our systems in a clear and concise manner. As you continue your journey in Rust, you'll find structs and enums to be invaluable tools in your programming arsenal, helping you build applications as sophisticated and reliable as the technology of the United Federation of Planets. 
