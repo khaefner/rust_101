@@ -57,9 +57,14 @@ Let's walk through the process of creating a new Rust project using Cargo and ad
 
 Create a New Project: Open your terminal and navigate to the directory where you want to create your project. Then, run the following command:   
 
-![yellow_alert](Yellow_Alert_Icon.png)
-
+<div class="warning-block">
+  <img src="Yellow_Alert_Icon.png" alt="Yellow Alert Icon" class="warning-icon">
+  <p class="warning-text">
 You must run these commands in the terminal.
+  </p>
+</div>
+
+
 
 ```bash
 cargo new starfleet_analyzer

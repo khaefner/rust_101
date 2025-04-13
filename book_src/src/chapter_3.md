@@ -69,7 +69,7 @@ fn main() {
 }
 ```
 
-In this case, when we assign `starship1` to `starship2`, Rust doesn't create a deep copy of the data on the heap. Instead, it performs a move. The ownership of the underlying data is transferred from starship1 to `starship2`. After the move, `starship1` is no longer considered valid. Trying to use `starship1` after the move will result in a compile-time error, preventing a double free error (where the same memory is freed twice, leading to potential crashes). Think of this as transferring command of the starship – once the new captain takes over, the previous captain is no longer in command.
+In this case, when we assign `starship1` to `starship2`, Rust doesn't create a deep copy of the data on the heap. Instead, it performs a move. The ownership of the underlying data is transferred from `starship1` to `starship2`. After the move, `starship1` is no longer considered valid. Trying to use `starship1` after the move will result in a compile-time error, preventing a double free error (where the same memory is freed twice, leading to potential crashes). 
 
 ### ![logo](Star_Trek_icon.png) Copy: Duplicating Data in the Replicator
 
