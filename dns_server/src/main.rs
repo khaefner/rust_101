@@ -1,6 +1,6 @@
 use std::{
-    net::{SocketAddr, UdpSocket},
-    str,
+    net::UdpSocket,
+    str
 };
 
 // Basic DNS header flags for a response
@@ -10,7 +10,8 @@ const DNS_RESPONSE_FLAGS: u16 = {
     // QR (Query/Response): 1 for response
     let qr_response: u16 = 0b1000_0000_0000_0000;
 
-    // Opcode: 0000 for standard query (in a response, it usually mirrors the query)
+    // Opcode: 0000 for standard query 
+    //(in a response, it usually mirrors the query, bit of a hack that we are not building it from query)
     let opcode_standard: u16 = 0b0000_0000_0000_0000; // No bits set for 0
 
     // AA (Authoritative Answer): 0 for non-authoritative in this example
@@ -70,7 +71,7 @@ fn parse_query_domain(query: &[u8]) -> Option<String> {
     }
 }
 
-fn create_response_packet(query: &[u8], domain: &str, ip_address: &str) -> Option<Vec<u8>> {
+fn create_response_packet(query: &[u8], _domain: &str, ip_address: &str) -> Option<Vec<u8>> {
     let mut response = Vec::new();
 
     // Header
@@ -118,7 +119,6 @@ fn main() -> Result<(), std::io::Error> {
     let addr = "0.0.0.0:1053"; //So we don't need root
     let socket = UdpSocket::bind(addr)?;
     println!("DNS server listening on {}", addr);
-    println!("{:?}", DNS_RESPONSE_FLAGS );
 
     let mut buf = [0; 512];
 

@@ -175,10 +175,10 @@ fn modify_starship_name(ship_name: &mut String, new_suffix: &str) {
 }
 
 fn main() {
-    let mut starship = String::from("USS Voyager");
+    let mut starship = String::from("USS Enterprise NCC-1701");
     println!("Original starship name: {}", starship);
 
-    modify_starship_name(&mut starship, "-A"); // Calling the function with a mutable reference
+    modify_starship_name(&mut starship, "-C"); // Calling the function with a mutable reference
 
     println!("Modified starship name: {}", starship);
 }

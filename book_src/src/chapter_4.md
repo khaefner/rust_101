@@ -11,7 +11,7 @@ Structs (short for "structures") are a way to group together multiple values of 
 
 Here's how we can define a struct to represent a starship:
 
-```rust, editable
+```rust
 #[derive(Debug)]
 struct Starship {
     name: String,
@@ -23,15 +23,23 @@ struct Starship {
 ```
 In this code:
 
-    struct Starship declares a new struct named Starship.
-    The curly braces {} enclose the definitions of the fields within the struct.
-    Each field has a name (e.g., name, class) and a type (e.g., String, bool, u32), separated by a colon.
-    #[derive(Debug)] is an attribute that automatically implements the Debug trait for our Starship struct. This allows us to easily print the struct's contents for debugging using the {:?} format specifier in println!.
+struct `Starship` declares a new struct named Starship.
+The curly braces `{}` enclose the definitions of the fields within the struct.
+Each field has a name (e.g., name, class) and a type (e.g., String, bool, u32), separated by a colon.
+`#[derive(Debug)]` is an attribute that automatically implements the Debug trait for our Starship struct. This allows us to easily print the struct's contents for debugging using the `{:?}` format specifier in `println!`.
 
 Now that we have defined our Starship struct, we can create instances of it:
 
 ```rust, editable
 fn main() {
+    #[derive(Debug)]
+struct Starship {
+    name: String,
+    class: String,
+    registry: String,
+    warp_capable: bool,
+    crew_capacity: u32,
+}
     let enterprise = Starship {
         name: String::from("USS Enterprise"),
         class: String::from("Constitution"),
@@ -48,6 +56,14 @@ Here, we create an instance of Starship named enterprise. We provide values for 
 We can access the individual fields of a struct instance using dot notation:
 
 ```rust, editable
+    #[derive(Debug)]
+struct Starship {
+    name: String,
+    class: String,
+    registry: String,
+    warp_capable: bool,
+    crew_capacity: u32,
+}
 fn main() {
     let defiant = Starship {
         name: String::from("USS Defiant"),
@@ -124,9 +140,9 @@ fn main() {
 ```
 In this code:
 
-    enum StarshipClass declares a new enum named StarshipClass.
-    The values within the curly braces are called variants. Here, Cruiser, Destroyer, ScienceVessel, Freighter, and Shuttle are the possible values that a variable of type StarshipClass can hold.
-    We access enum variants using the double colon :: (e.g., StarshipClass::Cruiser).
+`enum` StarshipClass declares a new `enum` named `StarshipClass`.
+The values within the curly braces are called variants. Here, Cruiser, Destroyer, ScienceVessel, Freighter, and Shuttle are the possible values that a variable of type StarshipClass can hold.
+We access enum variants using the double colon :: (e.g., `StarshipClass::Cruiser`).
 
 ### ![logo](Star_Trek_icon.png) Enums with Data
 
@@ -166,6 +182,14 @@ Here, our ShipStatus enum can represent different states:
 Enums are often used with the match control flow construct, which allows you to execute different code based on the specific variant of the enum.
 
 ```rust, editable
+#[derive(Debug)]
+enum ShipStatus {
+    Online,
+    Offline,
+    Warping(f64), // Variant holding a warp factor (f64)
+    Docked { at_starbase: String }, // Variant holding a named field
+    Alert(String), // Variant holding an alert level (String)
+}
 fn report_status(status: &ShipStatus) {
     match status {
         ShipStatus::Online => println!("Ship is online and operational."),
@@ -175,7 +199,6 @@ fn report_status(status: &ShipStatus) {
         ShipStatus::Alert(level) => println!("Ship is under {}!", level),
     }
 }
-```
 fn main() {
     let ship_status = ShipStatus::Warping(7.5);
     report_status(&ship_status);
@@ -183,6 +206,7 @@ fn main() {
     let another_status = ShipStatus::Docked { at_starbase: String::from("Earth Spacedock") };
     report_status(&another_status);
 }
+```
 
 The match expression in report_status checks the variant of the status enum and executes the corresponding code block. Notice how we can destructure the data associated with the Warping and Docked variants to access their values.
 
@@ -192,6 +216,14 @@ We can define methods (functions associated with a specific type) on both struct
 #### Methods on Structs
 
 ```rust, editable
+#[derive(Debug)]
+struct Starship {
+    name: String,
+    class: String,
+    registry: String,
+    warp_capable: bool,
+    crew_capacity: u32,
+}
 impl Starship {
     fn describe(&self) {
         println!("This is the {} class vessel '{}' with registry {}.", self.class, self.name, self.registry);
@@ -220,6 +252,13 @@ In the `impl Starship` block, we define two methods: describe and is_ready. The 
 ### ![logo](Star_Trek_icon.png) Methods on Enums
 
 ```rust, editable
+enum ShipStatus {
+    Online,
+    Offline,
+    Warping(f64), // Variant holding a warp factor (f64)
+    Docked { at_starbase: String }, // Variant holding a named field
+    Alert(String), // Variant holding an alert level (String)
+}
 impl ShipStatus {
     fn can_engage_warp(&self) -> bool {
         match self {
@@ -237,7 +276,22 @@ fn main() {
     println!("Can ship 2 engage warp? {}", status2.can_engage_warp());
 }
 ```
-Here, we define a method can_engage_warp on the ShipStatus enum. It uses a match expression to determine if the current status allows warp travel.
-Conclusion: Building Blocks of the Federation Fleet
+Here, we define a method `can_engage_warp` on the `ShipStatus` enum. It uses a match expression to determine if the current status allows warp travel.
+
+<details class="discovery-details">
+  <summary class="discovery-summary">
+    <img src="info.png" alt="Star Trek Cadet" class="info-closed">
+    <img src="info.png" alt="" class="info-open">
+    The `_` Underscore
+  </summary>
+  <div class="discovery-content">
+
+The underscore _ in Rust serves multiple purposes as a special identifier. Primarily, it's used to indicate that a variable or parameter is intentionally unused, preventing compiler warnings. In match expressions, _ acts as a wildcard pattern, matching any value that hasn't been matched by previous arms. It can also be used within patterns to ignore specific parts of a structure, like fields in a struct or elements in a tuple. Additionally, _ can sometimes be used as a placeholder for type inference, allowing the compiler to deduce the type. Finally, it can be used as a visual separator in numeric literals to enhance readability, such as 1_000_000.
+
+  </div>
+  </details>
+
+
+### ![logo](Star_Trek_icon.png) Conclusion: Building Blocks of the Federation Fleet
 
 Structs and enums are fundamental building blocks in Rust, allowing us to create well-organized and meaningful data structures that accurately represent the entities and states within our programs. By using structs, we can define the properties of complex objects like starships, and with enums, we can represent a finite set of possible values or states. Combined with methods, these constructs enable us to model the behavior of our systems in a clear and concise manner. As you continue your journey in Rust, you'll find structs and enums to be invaluable tools in your programming arsenal, helping you build applications as sophisticated and reliable as the technology of the United Federation of Planets. 

@@ -38,16 +38,16 @@ enum Result<T, E> {
 }
 ```
 
-    Ok(T): This variant indicates that the operation was successful and holds the resulting value of type T.
-    Err(E): This variant indicates that the operation failed and holds an error value of type E. The E type is often used to represent the specific kind of error that occurred.
+`Ok(T)`: This variant indicates that the operation was successful and holds the resulting value of type `T`.
+`Err(E)`: This variant indicates that the operation failed and holds an error value of type`E` The `E` type is often used to represent the specific kind of error that occurred.
 
 Here's an example of a function that might return a Result:
 
 ```rust, editable
 use std::fs::File;
-use std::io::ErrorKind;
+use std::io::{ErrorKind, Error}; // Import Error as well
 
-fn open_log_file(filename: &str) -> Result<File, std::io::Error> {
+fn open_log_file(filename: &str) -> Result<File, Error> { // Use Error here
     match File::open(filename) {
         Ok(file) => Ok(file), // File opened successfully, return the File wrapped in Ok
         Err(error) => match error.kind() {
@@ -57,7 +57,8 @@ fn open_log_file(filename: &str) -> Result<File, std::io::Error> {
             }
             other_error => {
                 // Some other error occurred
-                Err(other_error)
+                // Convert ErrorKind to Error using .into()
+                Err(other_error.into())
             }
         },
     }
@@ -73,11 +74,10 @@ fn main() {
 
 In this code:
 
-    The open_log_file function attempts to open a file. It returns a Result where T is File (the type representing an opened file) and E is std::io::Error (a type representing I/O errors).
-    Inside the function, we use a match expression on the result of File::open(filename).
-    If File::open returns Ok(file), we wrap the file in Ok and return it.
-    If File::open returns Err(error), we further examine the kind of error. If it's a NotFound error, we could potentially try to create the file (though in this example, we simply return the error). For any other type of error, we also return the error wrapped in Err.
-    In the main function, we call open_log_file and use another match expression to handle the returned Result. If it's Ok, we print a success message. If it's Err, we print an error message (using {:?} to display the error for debugging).
+use std::io::{ErrorKind, Error};: We explicitly import the Error type from std::io.
+fn open_log_file(filename: &str) -> Result<File, Error>: While not strictly necessary for the fix, it's clearer to use the type alias Error for std::io::Error.
+Err(other_error.into()): In the other_error arm, we now call .into() on other_error (which is of type ErrorKind). This converts the ErrorKind into a std::io::Error, which is the expected type for the Err variant of our Result.
+In the main function, we call open_log_file and use another match expression to handle the returned Result. If it's Ok, we print a success message. If it's Err, we print an error message (using {:?} to display the error for debugging).
 
 ### Handling Result: Examining the Mission Report
 
@@ -90,7 +90,27 @@ if let: Concise Handling of Success or Failure
 If you're only interested in handling one of the Result variants (either Ok or Err) and want to ignore the other, you can use if let.
 
 ```rust, editable
+use std::fs::File;
+use std::io::{ErrorKind, Error}; // Import Error as well
 fn main() {
+
+fn open_log_file(filename: &str) -> Result<File, Error> { // Use Error here
+    match File::open(filename) {
+        Ok(file) => Ok(file), // File opened successfully, return the File wrapped in Ok
+        Err(error) => match error.kind() {
+            ErrorKind::NotFound => {
+                // Log file not found, perhaps create it? For now, return the error
+                Err(error)
+            }
+            other_error => {
+                // Some other error occurred
+                // Convert ErrorKind to Error using .into()
+                Err(other_error.into())
+            }
+        },
+    }
+}
+
     let log_file_result = open_log_file("starship_log.txt");
 
     if let Ok(_file) = log_file_result {
