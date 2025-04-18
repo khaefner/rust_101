@@ -1,297 +1,303 @@
-<link rel="stylesheet" href="star.css">
-
-## Chapter 5: Defining Starfleet Structures and Classifications
+## Chapter 4: Exploring the Cosmos of Data: Collections and Iteration
 ![logo](Line_Header_Star_Trek.png)
 
-Welcome back, cadets! In this chapter, we'll delve into the creation of custom data types in Rust using two powerful tools: structs and enums. Think of structs as blueprints for our Starfleet vessels, allowing us to group together related information. Enums, on the other hand, are like the classifications we use to categorize different types of ships or the various operational states they can be in. Mastering these concepts will enable us to model complex systems within our Rust programs with clarity and precision.
+Welcome back, cadets! In the vast expanse of space, Starfleet vessels encounter countless forms of data – sensor readings, crew manifests, star charts, and more. To manage this information effectively, we need ways to store and process collections of data. In this chapter, we'll explore some of Rust's fundamental collection types and learn how to iterate over them, allowing us to navigate the cosmos of data with precision.
 
-### ![logo](Star_Trek_icon.png) Structs: Creating Starship Blueprints
+### Vectors (`Vec<T>`): Resizable Starship Cargo Holds
 
-Structs (short for "structures") are a way to group together multiple values of different types under a single name. They allow you to create your own custom types that represent real-world entities, like a starship. Think of a struct as a blueprint that defines the properties or fields of a starship.
+Vectors are the most common type of collection in Rust. Think of them as resizable arrays, like the cargo holds of a starship that can expand or contract as needed. Vectors can store a sequence of elements of the same type.
 
-Here's how we can define a struct to represent a starship:
+**Creating Vectors:**
 
-```rust
-#[derive(Debug)]
-struct Starship {
-    name: String,
-    class: String,
-    registry: String,
-    warp_capable: bool,
-    crew_capacity: u32,
+You can create an empty vector using `Vec::new()`:
+
+```rust,editable
+fn main() {
+    let mut crew_manifest: Vec<&str> = Vec::new(); // Create an empty vector that will hold string slices
+    println!("Initial crew manifest: {:?}", crew_manifest);
 }
 ```
-In this code:
 
-struct `Starship` declares a new struct named Starship.
-The curly braces `{}` enclose the definitions of the fields within the struct.
-Each field has a name (e.g., name, class) and a type (e.g., String, bool, u32), separated by a colon.
-`#[derive(Debug)]` is an attribute that automatically implements the Debug trait for our Starship struct. This allows us to easily print the struct's contents for debugging using the `{:?}` format specifier in `println!`.
+You can also create a vector with initial values using the vec! macro:
 
-Now that we have defined our Starship struct, we can create instances of it:
 
-```rust, editable
+```rust,editable
 fn main() {
-    #[derive(Debug)]
-struct Starship {
-    name: String,
-    class: String,
-    registry: String,
-    warp_capable: bool,
-    crew_capacity: u32,
-}
-    let enterprise = Starship {
-        name: String::from("USS Enterprise"),
-        class: String::from("Constitution"),
-        registry: String::from("NCC-1701"),
-        warp_capable: true,
-        crew_capacity: 203,
-    };
-
-    println!("Behold the: {:?}", enterprise);
+    let starfleet_ranks = vec!["Ensign", "Lieutenant", "Commander", "Captain", "Admiral"]; // Vector of string slices
+    println!("Starfleet ranks: {:?}", starfleet_ranks);
 }
 ```
-Here, we create an instance of Starship named enterprise. We provide values for each field in the order they are defined in the struct, using the syntax field_name: value.
 
-We can access the individual fields of a struct instance using dot notation:
+Or create a vector with a specific capacity (which can improve performance if you know the approximate number of elements beforehand):
 
-```rust, editable
-    #[derive(Debug)]
-struct Starship {
-    name: String,
-    class: String,
-    registry: String,
-    warp_capable: bool,
-    crew_capacity: u32,
-}
+```rust,editable
 fn main() {
-    let defiant = Starship {
-        name: String::from("USS Defiant"),
-        class: String::from("Defiant"),
-        registry: String::from("NX-74205"),
-        warp_capable: true,
-        crew_capacity: 50,
-    };
+    let mut photon_torpedo_launch_sequence: Vec<u8> = Vec::with_capacity(10); // Vector to hold up to 10 u8 values
+    println!("Initial torpedo sequence capacity: {}", photon_torpedo_launch_sequence.capacity());
+}
+```
 
-    println!("The {} is a {} class vessel.", defiant.name, defiant.class);
-    println!("Registry number: {}", defiant.registry);
-    if defiant.warp_capable {
-        println!("Warp drive engaged!");
+**Adding Elements:**
+
+You can add elements to the end of a vector using the push() method (note that the vector must be declared as mutable):
+
+```rust,editable
+fn main() {
+    let mut crew_manifest = vec!["Picard"];
+    crew_manifest.push("Riker");
+    crew_manifest.push("Data");
+    println!("Updated crew manifest: {:?}", crew_manifest);
+}
+```
+
+**Accessing Elements:**
+
+You can access elements of a vector using indexing (starting from 0), similar to arrays:
+
+
+```rust,editable
+fn main() {
+    let starfleet_ranks = vec!["Ensign", "Lieutenant", "Commander"];
+    let first_rank = starfleet_ranks[0]; // Access the element at index 0
+    println!("First rank: {}", first_rank);
+}
+``` 
+
+It's safer to use the get() method, which returns an Option. This prevents your program from crashing if you try to access an index that is out of bounds:
+
+```rust,editable
+fn main() {
+    let starfleet_ranks = vec!["Ensign", "Lieutenant", "Commander"];
+    let maybe_rank = starfleet_ranks.get(3); // Trying to access an index that doesn't exist
+    match maybe_rank {
+        Some(rank) => println!("Rank at index 3: {}", rank),
+        None => println!("No rank found at index 3."),
     }
 }
 ```
-### ![logo](Star_Trek_icon.png) Tuple Structs
 
-Rust also provides a variation called tuple structs, which are like named tuples. They don't have named fields; instead, you access their elements by index.  
+**Mutability:**
 
-
-```rust, editable
-#[derive(Debug)]
-struct Coordinates(f64, f64, f64); // Represents X, Y, Z coordinates
+Vectors are mutable if declared with mut. You can change the elements at specific indices:
+```rust,editable
 
 fn main() {
-    let earth_coordinates = Coordinates(0.0, 0.0, 0.0);
-    println!("Earth's coordinates: {:?}", earth_coordinates);
-    println!("X-coordinate: {}", earth_coordinates.0);
-    println!("Y-coordinate: {}", earth_coordinates.1);
-    println!("Z-coordinate: {}", earth_coordinates.2);
+    let mut shield_levels = vec![50, 50, 50];
+    println!("Initial shield levels: {:?}", shield_levels);
+    shield_levels[1] = 75; // Modify the element at index 1
+    println!("Updated shield levels: {:?}", shield_levels);
 }
 ```
-Tuple structs can be useful when you want to give a name to a tuple but don't necessarily need names for each individual element.
-Unit Structs
 
-Finally, Rust has unit structs, which don't have any fields at all. They are useful when you need to create a type that only represents a concept without holding any data.  
+#### Iterating Over Vectors:
 
+You can iterate over the elements of a vector using a for loop in several ways:
 
-```rust, editable
-struct PhotonTorpedo; // Represents a photon torpedo
+**Iterating immutably:**
+
+```rust,editable
 
 fn main() {
-    let torpedo = PhotonTorpedo;
-    println!("A photon torpedo has been launched.");
-    // Unit structs don't have any fields to access
-}
-```
-### ![logo](Star_Trek_icon.png) Enums: Defining Starfleet States and Classifications
-
-Enums (short for "enumerations") allow you to define a type by enumerating its possible values. Think of enums as the different classifications of starships (e.g., Cruiser, Destroyer, Science Vessel) or the various operational states a ship can be in (e.g., Docked, InWarp, Alert).  
-
-Here's how we can define an enum for starship classes:
-
-```rust, editable
-#[derive(Debug)]
-enum StarshipClass {
-    Cruiser,
-    Destroyer,
-    ScienceVessel,
-    Freighter,
-    Shuttle,
-}
-
-fn main() {
-    let enterprise_class = StarshipClass::Cruiser;
-    let defiant_class = StarshipClass::Destroyer;
-    let voyager_class = StarshipClass::ScienceVessel;
-
-    println!("Enterprise is a {:?}", enterprise_class);
-    println!("Defiant is a {:?}", defiant_class);
-    println!("Voyager is a {:?}", voyager_class);
-}
-```
-In this code:
-
-`enum` StarshipClass declares a new `enum` named `StarshipClass`.
-The values within the curly braces are called variants. Here, Cruiser, Destroyer, ScienceVessel, Freighter, and Shuttle are the possible values that a variable of type StarshipClass can hold.
-We access enum variants using the double colon :: (e.g., `StarshipClass::Cruiser`).
-
-### ![logo](Star_Trek_icon.png) Enums with Data
-
-A powerful feature of Rust enums is that they can hold data within their variants. This allows you to associate different kinds of data with each possible value of the enum.
-
-```rust, editable
-#[derive(Debug)]
-enum ShipStatus {
-    Online,
-    Offline,
-    Warping(f64), // Variant holding a warp factor (f64)
-    Docked { at_starbase: String }, // Variant holding a named field
-    Alert(String), // Variant holding an alert level (String)
-}
-
-fn main() {
-    let ship1_status = ShipStatus::Online;
-    let ship2_status = ShipStatus::Warping(9.9);
-    let ship3_status = ShipStatus::Docked { at_starbase: String::from("Deep Space 9") };
-    let ship4_status = ShipStatus::Alert(String::from("Red Alert"));
-
-    println!("Ship 1 status: {:?}", ship1_status);
-    println!("Ship 2 status: {:?}", ship2_status);
-    println!("Ship 3 status: {:?}", ship3_status);
-    println!("Ship 4 status: {:?}", ship4_status);
-}
-```
-Here, our ShipStatus enum can represent different states:
-
-    Online and Offline are simple variants without any associated data.
-    Warping is a variant that holds a f64 value representing the warp factor.
-    Docked is a variant that holds a struct-like data structure with a named field at_starbase of type String.
-    Alert is a variant that holds a String representing the alert level.
-
-### ![logo](Star_Trek_icon.png) Using match with Enums
-
-Enums are often used with the match control flow construct, which allows you to execute different code based on the specific variant of the enum.
-
-```rust, editable
-#[derive(Debug)]
-enum ShipStatus {
-    Online,
-    Offline,
-    Warping(f64), // Variant holding a warp factor (f64)
-    Docked { at_starbase: String }, // Variant holding a named field
-    Alert(String), // Variant holding an alert level (String)
-}
-fn report_status(status: &ShipStatus) {
-    match status {
-        ShipStatus::Online => println!("Ship is online and operational."),
-        ShipStatus::Offline => println!("Ship is currently offline."),
-        ShipStatus::Warping(factor) => println!("Ship is warping at factor {}.", factor),
-        ShipStatus::Docked { at_starbase } => println!("Ship is docked at {}.", at_starbase),
-        ShipStatus::Alert(level) => println!("Ship is under {}!", level),
+    let starfleet_ranks = vec!["Ensign", "Lieutenant", "Commander"];
+    println!("Starfleet ranks:");
+    for rank in starfleet_ranks.iter() {
+        println!("- {}", rank);
     }
 }
-fn main() {
-    let ship_status = ShipStatus::Warping(7.5);
-    report_status(&ship_status);
-
-    let another_status = ShipStatus::Docked { at_starbase: String::from("Earth Spacedock") };
-    report_status(&another_status);
-}
 ```
+**Iterating mutably:**
 
-The match expression in report_status checks the variant of the status enum and executes the corresponding code block. Notice how we can destructure the data associated with the Warping and Docked variants to access their values.
-
-### ![logo](Star_Trek_icon.png) Methods on Structs and Enums: Giving Starships and States Functionality
-
-We can define methods (functions associated with a specific type) on both structs and enums using the impl (implementation) keyword. This allows us to add behavior to our custom data types.
-#### Methods on Structs
-
-```rust, editable
-#[derive(Debug)]
-struct Starship {
-    name: String,
-    class: String,
-    registry: String,
-    warp_capable: bool,
-    crew_capacity: u32,
-}
-impl Starship {
-    fn describe(&self) {
-        println!("This is the {} class vessel '{}' with registry {}.", self.class, self.name, self.registry);
-    }
-
-    fn is_ready(&self) -> bool {
-        self.warp_capable && self.crew_capacity > 0
-    }
-}
+```rust,editable
 
 fn main() {
-    let defiant = Starship {
-        name: String::from("USS Defiant"),
-        class: String::from("Defiant"),
-        registry: String::from("NX-74205"),
-        warp_capable: true,
-        crew_capacity: 50,
-    };
-
-    defiant.describe();
-    println!("Is the ship ready? {}", defiant.is_ready());
+    let mut phaser_banks = vec![50, 50, 50];
+    println!("Initial phaser bank levels: {:?}", phaser_banks);
+    for level in phaser_banks.iter_mut() {
+        *level += 10; // Dereference the mutable reference to modify the value
+    }
+    println!("Updated phaser bank levels: {:?}", phaser_banks);
 }
 ```
-In the `impl Starship` block, we define two methods: describe and is_ready. The `&self` parameter in the describe method is a reference to the instance of the Starship struct on which the method is being called. The `is_ready` method returns a boolean value based on the warp_capable and crew_capacity fields.
+**Taking ownership and iterating:**
 
-### ![logo](Star_Trek_icon.png) Methods on Enums
-
-```rust, editable
-enum ShipStatus {
-    Online,
-    Offline,
-    Warping(f64), // Variant holding a warp factor (f64)
-    Docked { at_starbase: String }, // Variant holding a named field
-    Alert(String), // Variant holding an alert level (String)
-}
-impl ShipStatus {
-    fn can_engage_warp(&self) -> bool {
-        match self {
-            ShipStatus::Warping(_) | ShipStatus::Online => true,
-            _ => false,
-        }
-    }
-}
+```rust,editable
 
 fn main() {
-    let status1 = ShipStatus::Online;
-    let status2 = ShipStatus::Docked { at_starbase: String::from("Jupiter Station") };
-
-    println!("Can ship 1 engage warp? {}", status1.can_engage_warp());
-    println!("Can ship 2 engage warp? {}", status2.can_engage_warp());
+    let crew_names = vec![String::from("Picard"), String::from("Riker"), String::from("Data")];
+    println!("Crew names:");
+    for name in crew_names.into_iter() {
+        println!("- {}", name);
+        // The vector 'crew_names' is consumed here and can no longer be used
+    }
+    // println!("{:?}", crew_names); // This would cause an error as crew_names has been moved
 }
 ```
-Here, we define a method `can_engage_warp` on the `ShipStatus` enum. It uses a match expression to determine if the current status allows warp travel.
+### Hash Maps (HashMap<K, V>): Storing Starship System Data
 
-<details class="discovery-details">
-  <summary class="discovery-summary">
-    <img src="info.png" alt="Star Trek Cadet" class="info-closed">
-    <img src="info.png" alt="" class="info-open">
-    The `_` Underscore
-  </summary>
-  <div class="discovery-content">
+Hash maps are collections that store key-value pairs. Think of them as the databases on a starship, where you can quickly look up information (the value) using a unique identifier (the key). Hash maps are useful for associating data with specific labels.
 
-The underscore _ in Rust serves multiple purposes as a special identifier. Primarily, it's used to indicate that a variable or parameter is intentionally unused, preventing compiler warnings. In match expressions, _ acts as a wildcard pattern, matching any value that hasn't been matched by previous arms. It can also be used within patterns to ignore specific parts of a structure, like fields in a struct or elements in a tuple. Additionally, _ can sometimes be used as a placeholder for type inference, allowing the compiler to deduce the type. Finally, it can be used as a visual separator in numeric literals to enhance readability, such as 1_000_000.
+Creating Hash Maps:
 
-  </div>
-  </details>
+You can create an empty hash map using HashMap::new() (you need to import it from the std::collections module):
+```rust,editable
 
+use std::collections::HashMap;
 
-### ![logo](Star_Trek_icon.png) Conclusion: Building Blocks of the Federation Fleet
+fn main() {
+    let mut starship_registry: HashMap<&str, &str> = HashMap::new();
+    println!("Initial registry: {:?}", starship_registry);
+}
+```
+You can also create a hash map with initial key-value pairs:
+```rust,editable
 
-Structs and enums are fundamental building blocks in Rust, allowing us to create well-organized and meaningful data structures that accurately represent the entities and states within our programs. By using structs, we can define the properties of complex objects like starships, and with enums, we can represent a finite set of possible values or states. Combined with methods, these constructs enable us to model the behavior of our systems in a clear and concise manner. As you continue your journey in Rust, you'll find structs and enums to be invaluable tools in your programming arsenal, helping you build applications as sophisticated and reliable as the technology of the United Federation of Planets. 
+use std::collections::HashMap;
+
+fn main() {
+    let mut starship_registry = HashMap::from([
+        ("USS Enterprise", "NCC-1701"),
+        ("USS Voyager", "NCC-74656"),
+        ("USS Defiant", "NX-74205"),
+    ]);
+    println!("Starship registry: {:?}", starship_registry);
+}
+```
+Inserting Elements:
+
+You can insert new key-value pairs into a hash map using the insert() method:
+```rust,editable
+
+use std::collections::HashMap;
+
+fn main() {
+    let mut starship_registry = HashMap::new();
+    starship_registry.insert("USS Enterprise", "NCC-1701");
+    starship_registry.insert("USS Voyager", "NCC-74656");
+    println!("Updated registry: {:?}", starship_registry);
+}
+```
+Accessing Elements:
+
+You can retrieve a value from a hash map using its key with the get() method, which returns an Option:
+```rust,editable
+
+use std::collections::HashMap;
+
+fn main() {
+    let starship_registry = HashMap::from([("USS Enterprise", "NCC-1701")]);
+    let enterprise_registry = starship_registry.get("USS Enterprise");
+    match enterprise_registry {
+        Some(registry) => println!("USS Enterprise registry: {}", registry),
+        None => println!("USS Enterprise not found in registry."),
+    }
+}
+```
+Mutability:
+
+Hash maps are mutable if declared with mut. You can insert, update, or remove key-value pairs.
+
+Iterating Over Hash Maps:
+
+You can iterate over the key-value pairs in a hash map using a for loop:
+
+    Iterating immutably:
+
+```rust,editable
+
+use std::collections::HashMap;
+
+fn main() {
+    let starship_registry = HashMap::from([("USS Enterprise", "NCC-1701"), ("USS Voyager", "NCC-74656")]);
+    println!("Starship registry:");
+    for (name, registry) in starship_registry.iter() {
+        println!("- {}: {}", name, registry);
+    }
+}
+```
+    Iterating mutably:
+
+```rust,editable
+
+use std::collections::HashMap;
+
+fn main() {
+    let mut photon_torpedo_counts = HashMap::from([("Forward", 10), ("Aft", 5)]);
+    println!("Initial torpedo counts: {:?}", photon_torpedo_counts);
+    for (_, count) in photon_torpedo_counts.iter_mut() {
+        *count += 2;
+    }
+    println!("Updated torpedo counts: {:?}", photon_torpedo_counts);
+}
+```
+    Taking ownership and iterating:
+
+```rust,editable
+
+use std::collections::HashMap;
+
+fn main() {
+    let system_status = HashMap::from([
+        (String::from("Warp Core"), String::from("Online")),
+        (String::from("Shields"), String::from("Offline")),
+    ]);
+    println!("System status:");
+    for (system, status) in system_status.into_iter() {
+        println!("- {}: {}", system, status);
+    }
+    // The hash map 'system_status' is consumed here
+}
+```
+Other Useful Collections
+
+Rust's standard library provides other useful collection types, including:
+
+String: While not strictly a collection in the same way as Vec or HashMap, it can be thought of as a collection of characters.
+HashSet<T>: Stores unique values in no particular order. Useful for checking if a value exists in a set.
+BTreeMap<K, V> and BTreeSet<T>: Similar to HashMap and HashSet, but they store elements in a sorted order based on their keys.
+
+Iteration in Detail: The Core of Data Processing
+
+Iteration is the process of going through the elements of a collection one by one. In Rust, iteration is often done using iterators.  
+
+The Iterator Trait:
+
+The Iterator trait in Rust defines the behavior of an iterator. The most important method of this trait is next(), which returns an Option. Each time you call next() on an iterator, it produces the next item in the sequence. When the iterator reaches the end, next() returns None.
+
+for Loops and Iterators:
+
+The for loop in Rust is actually done syntactically over iterators. When you write for element in collection, Rust automatically creates an iterator for the collection and repeatedly calls next() until it returns None.
+
+Iterator Adaptors:
+
+Iterators in Rust are often used with adaptors, which are methods that transform an iterator into another iterator. This allows you to perform operations on the elements of a collection in a concise and expressive way. Here are a few examples:  
+
+`map()`: Applies a closure to each element of the iterator, producing a new iterator with the results.   
+
+```rust,editable
+
+fn main() {
+    let warp_factors = vec![2.0, 5.0, 8.0];
+    let doubled_factors: Vec<f64> = warp_factors.iter()
+        .map(|factor| factor * 2.0)
+        .collect(); // Collect the results into a new vector
+    println!("Doubled warp factors: {:?}", doubled_factors);
+}
+
+filter(): Creates a new iterator that yields only the elements for which the provided closure returns true.
+```rust,editable
+
+    fn main() {
+        let crew_ages = vec![25, 45, 30, 60, 35];
+        let experienced_crew: Vec<u8> = crew_ages.iter()
+            .filter(|&age| *age > 40)
+            .copied() // Convert &u8 to u8 for the new vector
+            .collect();
+        println!("Experienced crew ages: {:?}", experienced_crew);
+    }
+```
+collect(): Consumes the iterator and gathers the elements into a collection type, such as a Vec or HashMap.
+
+These are just a few examples of the many powerful iterator adaptors available in Rust. They allow you to perform complex data transformations and manipulations in a clean and efficient manner.
+Conclusion: Navigating Data with Confidence
+
+Collections and iteration are fundamental tools for managing and processing data in Rust. Whether you're storing a list of starship components in a Vec, looking up system statuses in a HashMap, or transforming sensor readings using iterators, these concepts will be essential for building sophisticated and data-driven applications worthy of the Federation. As you continue your Rust journey, explore the various collection types and master the art of iteration to confidently navigate the vast cosmos of data
