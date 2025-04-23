@@ -14,6 +14,7 @@ You can create an empty vector using `Vec::new()`:
 ```rust,editable
 fn main() {
     let mut crew_manifest: Vec<&str> = Vec::new(); // Create an empty vector that will hold string slices
+    crew_manifest.push("Riker");
     println!("Initial crew manifest: {:?}", crew_manifest);
 }
 ```
@@ -32,10 +33,16 @@ Or create a vector with a specific capacity (which can improve performance if yo
 
 ```rust,editable
 fn main() {
-    let mut photon_torpedo_launch_sequence: Vec<u8> = Vec::with_capacity(10); // Vector to hold up to 10 u8 values
+    let mut photon_torpedo_launch_sequence: Vec<u8> = Vec::with_capacity(1); // Vector to hold up to 10 u8 values
+    photon_torpedo_launch_sequence.push(1);
     println!("Initial torpedo sequence capacity: {}", photon_torpedo_launch_sequence.capacity());
 }
 ```
+**Capacity and reallocation**
+
+The capacity of a vector is the amount of space allocated for any future elements that will be added onto the vector. This is not to be confused with the length of a vector, which specifies the number of actual elements within the vector. If a vector’s length exceeds its capacity, its capacity will automatically be increased, but its elements will have to be reallocated.
+
+For example, a vector with capacity 10 and length 0 would be an empty vector with space for 10 more elements. Pushing 10 or fewer elements onto the vector will not change its capacity or cause reallocation to occur. However, if the vector’s length is increased to 11, it will have to reallocate, which can be slow. For this reason, it is recommended to use Vec::with_capacity whenever possible to specify how big the vector is expected to get.
 
 **Adding Elements:**
 

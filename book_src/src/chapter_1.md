@@ -4,11 +4,12 @@
 ## Welcome Aboard the Rust Starfleet Academy 
 ![logo](Line_Header_Star_Trek.png) 
 
-Welcome, cadets! You've embarked on an exciting journey to master the Rust programming language, a powerful tool that will serve you well in the vast expanse of software development. Here at Starfleet Academy, we believe that even the most complex technologies can be learned with dedication and a bit of fun. Our mission for the next hour? To explore the fundamentals of Rust through the lens of the United Federation of Planets and its incredible starfaring technology.
+Welcome, cadets! You've embarked on an exciting journey to master the Rust programming language, a powerful tool that will serve you well in the vast expanse of software development. Here at Starfleet Academy, we believe that even the most complex technologies can be learned with dedication and a bit of fun. Our mission for the next hour? To explore (where you may have not gone before) the fundamentals of Rust through the lens of the United Federation of Planets.   Coordinates set, warp factor 8.
+
 
 Think of Rust as the core engineering principle behind our starships – reliable, efficient, and capable of handling the most demanding tasks, from powering warp drives to maintaining delicate life support systems. Just as Starfleet engineers meticulously maintain their vessels, you will learn to craft robust and dependable software with Rust.
 
-This first chapter will lay the groundwork for your journey. We'll start by ensuring you have the necessary tools in your toolkit, much like a Starfleet engineer needs their trusty tricorder. We'll cover compiling your first Rust program and introduce you to Cargo, our standard Starfleet build and dependency management system.
+This first chapter will lay the groundwork for our journey. We'll start by ensuring you have the necessary tools in your toolkit, much like a Starfleet engineer needs their trusty tricorder. We'll cover compiling your first Rust program and introduce you to Cargo, our standard Starfleet build and dependency management system.
 
 ## ![logo](Star_Trek_icon.png) Setting Up Your Starfleet Engineering Station  
 

@@ -49,6 +49,68 @@ fn main() {
 
 Here, : `f64` after the variable name specifies that `warp_factor` will hold a 64-bit floating-point number. Specifying the type can be useful for clarity or when Rust can't infer the type on its own.
 
+Decalre a String
+
+```rust, editable
+fn main(){
+    let hello = String::from("Hello, world!");
+    println!("{hello}");
+}
+```
+
+<details class="discovery-details">
+  <summary class="discovery-summary">
+    <img src="info.png" alt="Star Trek Cadet" class="info-closed">
+    <img src="info.png" alt="" class="info-open">
+    Strings, stacks and heaps
+  </summary>
+  <div class="discovery-content">
+
+When you create a String like let my_string = String::from("Hello");, the my_string variable itself lives on the Stack. However, the actual character data "Hello" is stored on the Heap.
+
+The String value on the stack is essentially a small structure that contains three pieces of information needed to manage the data on the heap:
+
+Pointer (ptr): A pointer to the beginning of the allocated memory buffer on the heap where the string data is stored.
+Length (len): The number of bytes currently used by the string data (for "Hello", this is 5 bytes).
+Capacity (cap): The total size in bytes of the allocated buffer on the heap. This is often equal to or larger than the length, allowing the string to grow without immediately needing to reallocate memory.
+
+Here's how that might look in tables:
+
+### Stack
+
+The `my_string` variable sits on the stack and holds the management information for the heap data.
+
+| **Location (Stack)** | **Field** | **Example Value** | **Description** |
+| :----------------- | :------ | :------------ | :---------------------------------------------- |
+| `my_string` variable | `ptr`   | `0x1234ABCD`  | Pointer to the start of the data on the heap    |
+| `my_string` variable | `len`   | `5`           | Number of bytes currently used (for "Hello")    |
+| `my_string` variable | `cap`   | `8` (example) | Total bytes allocated on the heap buffer      |
+
+---
+
+### Heap
+
+The actual bytes representing "Hello" are stored in the memory buffer on the heap, starting at the address indicated by the `ptr` on the stack. The buffer's total size is determined by the `cap`.
+
+| **Location (Heap)** | **Content** | **Notes** |
+| :-------------- | :---------- | :------------------------- |
+| `0x1234ABCD`    | `'H'` (0x48) | First byte (pointed to)    |
+| `0x1234ABCE`    | `'e'` (0x65) | Second byte                |
+| `0x1234ABCF`    | `'l'` (0x6C) | Third byte                 |
+| `0x1234ABD0`    | `'l'` (0x6C) | Fourth byte                |
+| `0x1234ABD1`    | `'o'` (0x6F) | Fifth byte (End of `len`)  |
+| `0x1234ABD2`    | `(unused)`  |                            |
+| `0x1234ABD3`    | `(unused)`  |                            |
+| `0x1234ABD4`    | `(unused)`  | End of `cap` buffer        |
+
+
+Summary:
+
+The String on the stack doesn't contain "Hello" directly; it contains the necessary information (ptr, len, cap) to find and manage the "Hello" data which resides in a separate, allocated buffer on the heap. This separation allows String to be dynamically sized and mutable. When the my_string variable goes out of scope, Rust's ownership system ensures the memory on the heap at 0xABCDEF10 is automatically deallocated (freed).
+
+  </div>
+  </details>
+
 ### ![logo](Star_Trek_icon.png) Immutability by Default: Starfleet Directives
 
 One of Rust's core principles is immutability by default. This means that once you assign a value to a variable using `let`, you cannot change that value later in your program, unless you explicitly allow it. Think of this as a Starfleet directive – once a system is set, it generally remains that way for stability and predictability.
