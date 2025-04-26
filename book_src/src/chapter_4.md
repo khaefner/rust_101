@@ -25,6 +25,8 @@ You can also create a vector with initial values using the vec! macro:
 ```rust,editable
 fn main() {
     let starfleet_ranks = vec!["Ensign", "Lieutenant", "Commander", "Captain", "Admiral"]; // Vector of string slices
+    //starfleet_ranks.push("Cadet");
+    //star_fleet_ranks.push("Cadet");
     println!("Starfleet ranks: {:?}", starfleet_ranks);
 }
 ```
@@ -66,6 +68,7 @@ You can access elements of a vector using indexing (starting from 0), similar to
 fn main() {
     let starfleet_ranks = vec!["Ensign", "Lieutenant", "Commander"];
     let first_rank = starfleet_ranks[0]; // Access the element at index 0
+    //let first_rank = starfleet_ranks[5]; // Access the element at index 0
     println!("First rank: {}", first_rank);
 }
 ``` 
@@ -143,7 +146,7 @@ fn main() {
 
 Hash maps are collections that store key-value pairs. Think of them as the databases on a starship, where you can quickly look up information (the value) using a unique identifier (the key). Hash maps are useful for associating data with specific labels.
 
-Creating Hash Maps:
+**Creating Hash Maps:**
 
 You can create an empty hash map using HashMap::new() (you need to import it from the std::collections module):
 ```rust,editable
@@ -169,7 +172,7 @@ fn main() {
     println!("Starship registry: {:?}", starship_registry);
 }
 ```
-Inserting Elements:
+**Inserting Elements:**
 
 You can insert new key-value pairs into a hash map using the insert() method:
 ```rust,editable
@@ -183,7 +186,7 @@ fn main() {
     println!("Updated registry: {:?}", starship_registry);
 }
 ```
-Accessing Elements:
+**Accessing Elements:**
 
 You can retrieve a value from a hash map using its key with the get() method, which returns an Option:
 ```rust,editable
@@ -199,7 +202,7 @@ fn main() {
     }
 }
 ```
-Mutability:
+**Mutability:**
 
 Hash maps are mutable if declared with mut. You can insert, update, or remove key-value pairs.
 
@@ -254,7 +257,7 @@ fn main() {
     // The hash map 'system_status' is consumed here
 }
 ```
-Other Useful Collections
+## Other Useful Collections
 
 Rust's standard library provides other useful collection types, including:
 
@@ -266,7 +269,7 @@ Iteration in Detail: The Core of Data Processing
 
 Iteration is the process of going through the elements of a collection one by one. In Rust, iteration is often done using iterators.  
 
-The Iterator Trait:
+**The Iterator Trait:**
 
 The Iterator trait in Rust defines the behavior of an iterator. The most important method of this trait is next(), which returns an Option. Each time you call next() on an iterator, it produces the next item in the sequence. When the iterator reaches the end, next() returns None.
 
@@ -308,3 +311,52 @@ These are just a few examples of the many powerful iterator adaptors available i
 Conclusion: Navigating Data with Confidence
 
 Collections and iteration are fundamental tools for managing and processing data in Rust. Whether you're storing a list of starship components in a Vec, looking up system statuses in a HashMap, or transforming sensor readings using iterators, these concepts will be essential for building sophisticated and data-driven applications worthy of the Federation. As you continue your Rust journey, explore the various collection types and master the art of iteration to confidently navigate the vast cosmos of data
+
+# Match
+
+### Using `match`: Analyzing Conditions and Executing Protocols
+
+The `match` control flow operator in Rust is incredibly powerful. It allows you to compare a value against a series of patterns and then execute code based on which pattern the value matches. Think of `match` as the ship's computer analyzing various sensor readings or system states and then executing the appropriate protocols based on the situation.
+
+**Basic `match` Syntax:**
+
+The basic syntax for a `match` expression is:
+
+```rust,editable
+match expression {
+    pattern_1 => code_to_run_if_pattern_1_matches,
+    pattern_2 => code_to_run_if_pattern_2_matches,
+    // ... more arms
+    pattern_n => code_to_run_if_pattern_n_matches,
+}
+```
+
+Rust goes through the patterns one by one. When a pattern matches the expression, the corresponding code block is executed, and the match expression finishes.
+
+Matching on Simple Values:
+
+You can use match to compare a value against specific literal values:
+
+```rust,editable
+fn react_to_alert_level(level: u8) {
+    match level {
+        0 => println!("Condition Green: All systems normal."),
+        1 => println!("Condition Yellow: Minor anomaly detected. Increased vigilance."),
+        5 => println!("Condition Red: Major threat detected! Battle stations!"),
+        _ => println!("Unknown alert level. Proceed with caution."),
+    }
+}
+
+fn main() {
+    react_to_alert_level(0);
+    react_to_alert_level(5);
+    react_to_alert_level(3); // Matches the wildcard arm
+}
+```
+
+In this example, the match expression checks the value of the level variable. It matches the appropriate arm (0, 1, or 5) and prints a specific message. The _ is a wildcard pattern that matches any value not explicitly covered by the previous patterns. match expressions in Rust are exhaustive, meaning you must cover all possible cases for the type you are matching on (the wildcard _ is often used to fulfill this requirement).
+
+
+## Conclusion: Mastering the Analysis Engine
+
+The match expression is a fundamental control flow construct in Rust, providing a powerful and safe way to analyze values based on patterns. It's particularly useful for working with enums and handling Result and Option types. By mastering match, you gain the ability to write code that is both expressive and robust, capable of handling various situations with the precision of a Starfleet computer analyzing complex data streams. It's a key tool in your Rust programming arsenal, allowing you to execute the right protocols at the right time.

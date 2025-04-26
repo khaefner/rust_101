@@ -230,7 +230,9 @@ impl Starship {
     }
 
     fn is_ready(&self) -> bool {
-        self.warp_capable && self.crew_capacity > 0
+        self.warp_capable && self.crew_capacity > 0  //implict return of boolean
+        //return self.warp_capable && self.crew_capacity > 0;  //explicit return
+        /*Note both self.warp_capable and (self.crew_capacity > 0) are booleans*/
     }
 }
 
