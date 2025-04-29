@@ -2,7 +2,7 @@
 <link rel="stylesheet" href="star.css">
 
 
-# Chapter 2: Variables and Mutability: 
+# Chapter 2: First Contact with Rust - Variables and Mutability: 
 ## Assigning Crew and Adapting Systems
 ![logo](Line_Header_Star_Trek.png) 
 
