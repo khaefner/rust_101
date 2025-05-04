@@ -547,10 +547,22 @@ fn main() {
 
 - In the main function, we create an array `bridge_crew` and pass a slice of it (`&bridge_crew`) to `get_first_officer`. The returned reference is stored in the first variable, allowing us to access the first officer's name.
 
-### ![logo](Star_Trek_icon.png) Starfleet Analogy Recap
+### ![logo](Star_Trek_icon.png) Mission Log:
 
  -   `let`: Assigning a crew member to a station.
  -   Immutability by Default: Starfleet directives ensuring system stability.
  -   `mut`: Getting authorization to reassign a crew member when necessary.
  -   Shadowing: Temporarily redefining a designation for a specific task.
  -   `const`: The fundamental, unchanging laws governing the universe (or your program).
+
+# Mission Complete: Cadet Ready for Next Phase
+
+You've now:
+
+- Installed Rust.
+
+- Written and compiled a program.
+
+- Used variables and constants.
+
+- Written your own function.
