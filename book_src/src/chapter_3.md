@@ -192,6 +192,7 @@ When you pass a value to a function, the ownership rules apply.
 ```rust, editable
 fn take_ownership(some_string: String) { // 'some_string' comes into scope
     println!("{} taken", some_string);
+    some_string =  "Voyager";
 } // 'some_string' goes out of scope and 'drop' is called
 
 fn main() {
@@ -237,6 +238,17 @@ fn main() {
 ```
 
 In this case, the `give_ownership` function creates a String and returns it. The ownership of this String is then moved to the `received_string` variable in the main function.
+
+**Analogy:**
+
+Imagine you have a physical key (the pointer, length, capacity) to a secure locker (the data on the heap).
+
+When `some_string` is created, it gets the key to the locker.
+
+When `give_ownership` returns `some_string`, it's like `some_string` hands over its physical key to `received_string`.
+`some_string` no longer has a key (it's invalidated).
+
+`received_string` now has the one and only key to that specific locker. The contents of the locker weren't duplicated; just the key (control/ownership) was transferred.
 
 ### ![logo](Star_Trek_icon.png) Conclusion: Maintaining Order in the Galaxy of Data
 

@@ -38,7 +38,14 @@ In this code, `let` indicates the start of a variable declaration. `starship_nam
 In many cases, Rust is smart enough to figure out the type of data you're assigning to a variable. This is called type inference. In our previous example, Rust can infer that `"USS Enterprise"` is a string.
 
 However, you can also explicitly specify the type of a variable during declaration:
-Rust
+
+```rust, editable
+fn main() {
+    let warp_factor = 9.975;
+    println!("Engaging at warp factor: {}", warp_factor);
+}
+```
+
 
 ```rust, editable
 fn main() {
