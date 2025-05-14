@@ -3,7 +3,7 @@
 
 Welcome back, cadets! In the vast expanse of space, Starfleet vessels encounter countless forms of data – sensor readings, crew manifests, star charts, and more. To manage this information effectively, we need ways to store and process collections of data. In this chapter, we'll explore some of Rust's fundamental collection types and learn how to iterate over them, allowing us to navigate the cosmos of data with precision.
 
-### Vectors (`Vec<T>`): Resizable Starship Cargo Holds
+### ![logo](Star_Trek_icon.png) Vectors (`Vec<T>`): Resizable Starship Cargo Holds
 
 Vectors are the most common type of collection in Rust. Think of them as resizable arrays, like the cargo holds of a starship that can expand or contract as needed. Vectors can store a sequence of elements of the same type.
 
@@ -26,7 +26,6 @@ You can also create a vector with initial values using the vec! macro:
 fn main() {
     let starfleet_ranks = vec!["Ensign", "Lieutenant", "Commander", "Captain", "Admiral"]; // Vector of string slices
     //starfleet_ranks.push("Cadet");
-    //star_fleet_ranks.push("Cadet");
     println!("Starfleet ranks: {:?}", starfleet_ranks);
 }
 ```
@@ -78,11 +77,15 @@ It's safer to use the get() method, which returns an Option. This prevents your 
 ```rust,editable
 fn main() {
     let starfleet_ranks = vec!["Ensign", "Lieutenant", "Commander"];
-    let maybe_rank = starfleet_ranks.get(3); // Trying to access an index that doesn't exist
+    let maybe_rank = starfleet_ranks.get(2);  //This returns an Option Type
+   //let maybe_rank = starfleet_ranks.get(3); // Trying to access an index that doesn't exist
+   //Let's give the user some output we'll get into match in a bit
+   /*
     match maybe_rank {
         Some(rank) => println!("Rank at index 3: {}", rank),
-        None => println!("No rank found at index 3."),
+        None => println!("No rank found at index 3."), //Rust does not have nulls, but does have the concept as part of the enum Option <T>
     }
+    */
 }
 ```
 
@@ -99,7 +102,7 @@ fn main() {
 }
 ```
 
-#### Iterating Over Vectors:
+#### ![logo](Star_Trek_icon.png) Iterating Over Vectors:
 
 You can iterate over the elements of a vector using a for loop in several ways:
 
@@ -135,14 +138,14 @@ fn main() {
 fn main() {
     let crew_names = vec![String::from("Picard"), String::from("Riker"), String::from("Data")];
     println!("Crew names:");
-    for name in crew_names.into_iter() {
+    for name in crew_names.into_iter() {  //converts/moves into interatorg
         println!("- {}", name);
         // The vector 'crew_names' is consumed here and can no longer be used
     }
     // println!("{:?}", crew_names); // This would cause an error as crew_names has been moved
 }
 ```
-### Hash Maps (HashMap<K, V>): Storing Starship System Data
+### ![logo](Star_Trek_icon.png) Hash Maps (HashMap<K, V>): Storing Starship System Data
 
 Hash maps are collections that store key-value pairs. Think of them as the databases on a starship, where you can quickly look up information (the value) using a unique identifier (the key). Hash maps are useful for associating data with specific labels.
 
@@ -195,36 +198,41 @@ use std::collections::HashMap;
 
 fn main() {
     let starship_registry = HashMap::from([("USS Enterprise", "NCC-1701")]);
-    let enterprise_registry = starship_registry.get("USS Enterprise");
-    match enterprise_registry {
-        Some(registry) => println!("USS Enterprise registry: {}", registry),
-        None => println!("USS Enterprise not found in registry."),
+    let registration = starship_registry.get("USS Enterprise");  //This returns an Option<T> Enum
+    //let registration = starship_registry.get("USS Archer");  //This will have a None option.
+    match registration {
+        Some(registry) => println!("USS Enterprise registry: {}", registry), //here Some is a variant of option that conatins a value
+        None => println!("USS Enterprise not found in registry."),  //None is a variant of option that encodes no value contained.
     }
 }
 ```
+
+The Option<T> is a funcdamental way that Rust keeps track of concept of a value being present or not.
+
 **Mutability:**
 
 Hash maps are mutable if declared with mut. You can insert, update, or remove key-value pairs.
 
-Iterating Over Hash Maps:
+**Iterating Over Hash Maps:**
+
+__Iterating immutably:__
 
 You can iterate over the key-value pairs in a hash map using a for loop:
-
-    Iterating immutably:
 
 ```rust,editable
 
 use std::collections::HashMap;
 
 fn main() {
-    let starship_registry = HashMap::from([("USS Enterprise", "NCC-1701"), ("USS Voyager", "NCC-74656")]);
+    let starship_registry = HashMap::from([("USS Enterprise", "NCC-1701"), 
+    ("USS Voyager", "NCC-74656")]);
     println!("Starship registry:");
     for (name, registry) in starship_registry.iter() {
         println!("- {}: {}", name, registry);
     }
 }
 ```
-    Iterating mutably:
+**Iterating mutably:**
 
 ```rust,editable
 
@@ -233,31 +241,65 @@ use std::collections::HashMap;
 fn main() {
     let mut photon_torpedo_counts = HashMap::from([("Forward", 10), ("Aft", 5)]);
     println!("Initial torpedo counts: {:?}", photon_torpedo_counts);
-    for (_, count) in photon_torpedo_counts.iter_mut() {
+    for (_, count) in photon_torpedo_counts.iter_mut() {  //iter_mut returns a mutable reference to specific entry in the HashMap
         *count += 2;
     }
     println!("Updated torpedo counts: {:?}", photon_torpedo_counts);
 }
 ```
-    Taking ownership and iterating:
+**Taking ownership and iterating:**
 
 ```rust,editable
 
 use std::collections::HashMap;
 
 fn main() {
-    let system_status = HashMap::from([
+    let mut system_status = HashMap::from([  //remember we need to declare mutable if we want to change it later.
         (String::from("Warp Core"), String::from("Online")),
         (String::from("Shields"), String::from("Offline")),
     ]);
     println!("System status:");
+        for (system, status) in system_status.iter() {
+        println!("- {}: {}", system, status);
+    }
+
+        // Example of iter_mut(): Modifying the value for "Shields"
+    for (system, status) in system_status.iter_mut() {
+        if system == "Shields" {
+            *status = String::from("Online");
+        }
+    }
+
+        println!("\nSystem status after bringing shields online:");
+    for (system, status) in system_status.iter() {
+        println!("- {}: {}", system, status);
+    }
+
+     println!("\nNow using into_iter, and consuming system_status");
+
+    // The hash map 'system_status' is consumed here
     for (system, status) in system_status.into_iter() {
         println!("- {}: {}", system, status);
     }
-    // The hash map 'system_status' is consumed here
+
+    //meaning you can't use it here:
+    /*for (system, status) in system_status.iter() {
+        println!("- {}: {}", system, status);
+    }*/
+
 }
 ```
-## Other Useful Collections
+
+Think of it this way:
+
+`.iter()`: "Borrowing" the contents to look at them. The original container remains yours.
+
+`.iter_mut()`: "Borrowing" the contents to look at and potentially change them. The original container remains yours.
+
+`.into_iter()`: "Taking" the contents out of the container. The original container is no longer yours.
+
+
+## ![logo](Star_Trek_icon.png)  Other Useful Collections
 
 Rust's standard library provides other useful collection types, including:
 
@@ -265,7 +307,7 @@ String: While not strictly a collection in the same way as Vec or HashMap, it ca
 HashSet<T>: Stores unique values in no particular order. Useful for checking if a value exists in a set.
 BTreeMap<K, V> and BTreeSet<T>: Similar to HashMap and HashSet, but they store elements in a sorted order based on their keys.
 
-Iteration in Detail: The Core of Data Processing
+## ![logo](Star_Trek_icon.png)  Iteration in Detail: The Core of Data Processing
 
 Iteration is the process of going through the elements of a collection one by one. In Rust, iteration is often done using iterators.  
 
@@ -277,42 +319,41 @@ for Loops and Iterators:
 
 The for loop in Rust is actually done syntactically over iterators. When you write for element in collection, Rust automatically creates an iterator for the collection and repeatedly calls next() until it returns None.
 
-Iterator Adaptors:
+**Iterator Adaptors:**
 
-Iterators in Rust are often used with adaptors, which are methods that transform an iterator into another iterator. This allows you to perform operations on the elements of a collection in a concise and expressive way. Here are a few examples:  
-
-`map()`: Applies a closure to each element of the iterator, producing a new iterator with the results.   
+Important to note about iterators in rust.
 
 ```rust,editable
 
 fn main() {
-    let warp_factors = vec![2.0, 5.0, 8.0];
-    let doubled_factors: Vec<f64> = warp_factors.iter()
-        .map(|factor| factor * 2.0)
-        .collect(); // Collect the results into a new vector
-    println!("Doubled warp factors: {:?}", doubled_factors);
-}
+    let crew_ages = vec![25u8, 45u8, 30u8, 60u8, 35u8];
+    let mut experienced_crew_ages = Vec::new();
 
-filter(): Creates a new iterator that yields only the elements for which the provided closure returns true.
-```rust,editable
-
-    fn main() {
-        let crew_ages = vec![25, 45, 30, 60, 35];
-        let experienced_crew: Vec<u8> = crew_ages.iter()
-            .filter(|&age| *age > 40)
-            .copied() // Convert &u8 to u8 for the new vector
-            .collect();
-        println!("Experienced crew ages: {:?}", experienced_crew);
+    for age in crew_ages.iter() { // age is a reference of type &i32
+        if *age > 40 { // Dereference 'age' here with *age
+            println!("Found an experienced crew member aged: {}", *age);
+            experienced_crew_ages.push(*age); // Push the dereferenced value
+        }
     }
+    println!("All experienced crew ages: {:?}", experienced_crew_ages);
+}
 ```
-collect(): Consumes the iterator and gathers the elements into a collection type, such as a Vec or HashMap.
+```rust,editable
+fn main() {
+    let crew_ages = vec![25u8, 45u8, 30u8, 60u8, 35u8];
+    let mut experienced_crew_ages = Vec::new();
 
-These are just a few examples of the many powerful iterator adaptors available in Rust. They allow you to perform complex data transformations and manipulations in a clean and efficient manner.
-Conclusion: Navigating Data with Confidence
+    for age in crew_ages.into_iter() { // age is a copy
+        if age > 40 { // Now we can use the value directly
+            println!("Found an experienced crew member aged: {}", age);
+            experienced_crew_ages.push(age); // Push the dereferenced value
+        }
+    }
+    println!("All experienced crew ages: {:?}", experienced_crew_ages);
+}
+```
 
-Collections and iteration are fundamental tools for managing and processing data in Rust. Whether you're storing a list of starship components in a Vec, looking up system statuses in a HashMap, or transforming sensor readings using iterators, these concepts will be essential for building sophisticated and data-driven applications worthy of the Federation. As you continue your Rust journey, explore the various collection types and master the art of iteration to confidently navigate the vast cosmos of data
-
-# Match
+# ![logo](Star_Trek_icon.png)  Match
 
 ### Using `match`: Analyzing Conditions and Executing Protocols
 

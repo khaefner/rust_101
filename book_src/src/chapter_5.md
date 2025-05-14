@@ -5,6 +5,35 @@
 
 Welcome back, cadets! In this chapter, we'll delve into the creation of custom data types in Rust using two powerful tools: structs and enums. Think of structs as blueprints for our Starfleet vessels, allowing us to group together related information. Enums, on the other hand, are like the classifications we use to categorize different types of ships or the various operational states they can be in. Mastering these concepts will enable us to model complex systems within our Rust programs with clarity and precision.
 
+### struct (Structure)
+
+--- 
+
+
+- Purpose: To group together related pieces of data that form a meaningful unit. Each piece of data is called a "field." A struct defines a type that has a fixed set of fields.
+
+- Analogy: Think of a blueprint for an object that always has specific properties.
+    - A User struct might always have a username, an email, and an age.
+    - A Point struct might always have an x coordinate and a y coordinate.
+- "AND" Logic: An instance of a struct contains field A AND field B AND field C, etc.
+- Data Storage: All fields defined in the struct are present in every instance of that struc
+
+A struct is similar to a class in python.
+
+### enum (Enumeration)
+
+---
+
+
+- Purpose: To define a type that can have one of several possible variants (or states). Each variant can optionally hold associated data.
+- Analogy: Think of a set of choices.
+    - A TrafficLightColor enum could be either Red, Yellow, or Green.
+    - A Message enum could be either a Quit message (with no data), a Move message (with x and y coordinates), or a Write message (with a string).
+- "OR" Logic: An instance of an enum is variant A OR variant B OR variant C, etc.
+- Data Storage: An instance of an enum will only store the data associated with the specific variant it currently represents. The variants themselves can hold different types and amounts of data.
+
+An enum is similar to a dictionary in python.
+
 ### ![logo](Star_Trek_icon.png) Structs: Creating Starship Blueprints
 
 Structs (short for "structures") are a way to group together multiple values of different types under a single name. They allow you to create your own custom types that represent real-world entities, like a starship. Think of a struct as a blueprint that defines the properties or fields of a starship.
@@ -12,7 +41,7 @@ Structs (short for "structures") are a way to group together multiple values of 
 Here's how we can define a struct to represent a starship:
 
 ```rust
-#[derive(Debug)]
+#[derive(Debug)]  // this give us a way to print the struct easily using the {:?}
 struct Starship {
     name: String,
     class: String,
@@ -80,6 +109,45 @@ fn main() {
     }
 }
 ```
+
+Mutable structs work like you think they would:
+
+```rust,editable
+ #[derive(Debug)]
+struct Starship {
+    name: String,
+    class: String,
+    registry: String,
+    warp_capable: bool,
+    crew_capacity: u32,
+}
+fn main() {
+    let mut defiant = Starship { // Add 'mut' here
+        name: String::from("USS Defiant"),
+        class: String::from("Defiant"),
+        registry: String::from("NX-74205"),
+        warp_capable: true,
+        crew_capacity: 50,
+    };
+
+    println!("The {} is a {} class vessel.", defiant.name, defiant.class);
+    println!("Registry number: {}", defiant.registry);
+    if defiant.warp_capable {
+        println!("Warp drive engaged!");
+    }
+
+    // Now you can change crew_capacity
+    println!("Original crew capacity: {}", defiant.crew_capacity);
+    defiant.crew_capacity = 60; // Change the value
+    println!("Upgraded crew capacity: {}", defiant.crew_capacity);
+
+    // You could also change other fields if needed
+    // defiant.name = String::from("Renamed Defiant");
+}
+```
+
+
+
 ### ![logo](Star_Trek_icon.png) Tuple Structs
 
 Rust also provides a variation called tuple structs, which are like named tuples. They don't have named fields; instead, you access their elements by index.  
