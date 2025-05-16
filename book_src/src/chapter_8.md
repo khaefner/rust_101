@@ -127,25 +127,28 @@ fn parse_query_domain(query: &[u8]) -> Option<String> {
     if query_type == 1 && query_class == 1 { // Only handle A records for IN class
         Some(domain_parts.join("."))
     } else {
-        None
+        None //RETURN none if we don't match the above criteria
     }
 }
 ```
 This function takes a slice of bytes (query) representing a DNS query packet and attempts to extract the requested domain name.
-let mut index = 12;: DNS queries have a fixed 12-byte header. This line initializes an index to skip past this header to reach the question section.
-let mut domain_parts = Vec::new();: This creates an empty vector to store the individual parts of the domain name (e.g., "www", "example", "com").
+
+- `let mut index = 12;`: DNS queries have a fixed 12-byte header. This line initializes an index to skip past this header to reach the question section.
+
+- `let mut domain_parts = Vec::new();`: This creates an empty vector to store the individual parts of the domain name (e.g., "www", "example", "com").
+
 The while loop iterates through the question section of the query:
-let length = query[index] as usize;: The first byte of each domain name part indicates its length.
-index += 1;: Move the index to the start of the domain name part.
-if length == 0 { break; }: A zero length byte indicates the end of the domain name.
-if index + length > query.len() { return None; }: Checks if the announced length goes beyond the bounds of the received query.
-let part = str::from_utf8(&query[index..index + length]).ok()?;: This attempts to interpret the next length bytes as a UTF-8 string. The ok()? part handles potential errors during UTF-8 decoding by returning None if it fails.
-domain_parts.push(part.to_string());: The decoded part of the domain name is added to the domain_parts vector.
-index += length;: The index is advanced to the next length byte.
-if index + 4 > query.len() { return None; }: After parsing the domain name, the query should contain the query type (2 bytes) and query class (2 bytes). This checks if there are enough bytes remaining.
-let query_type = u16::from_be_bytes([query[index], query[index + 1]]);: Reads the next two bytes as a big-endian unsigned 16-bit integer, representing the query type. A value of 1 indicates an "A" record query (request for an IPv4 address).
-let query_class = u16::from_be_bytes([query[index + 2], query[index + 3]]);: Reads the next two bytes as a big-endian unsigned 16-bit integer, representing the query class. A value of 1 indicates the "IN" (Internet) class.
-if query_type == 1 && query_class == 1 { Some(domain_parts.join(".")) } else { None }: This checks if the query is for an "A" record in the "IN" class. If so, it joins the parts of the domain name with "." as a separator and returns it as an Option<String>. Otherwise, it returns None, indicating that this server only handles this specific type of query.
+- `let length = query[index] as usize;`: The first byte of each domain name part indicates its length.
+- `index += 1;`: Move the index to the start of the domain name part.
+- `if length == 0 { break; }:` A zero length byte indicates the end of the domain name.
+- `if index + length > query.len() { return None; }:` Checks if the announced length goes beyond the bounds of the received query.
+- `let part = str::from_utf8(&query[index..index + length]).ok()?;`: This attempts to interpret the next length bytes as a UTF-8 string. The ok()? part handles potential errors during UTF-8 decoding by returning None if it fails.  Propagating the error up the stack
+- `domain_parts.push(part.to_string());`: The decoded part of the domain name is added to the domain_parts vector.
+- `index += length;`: The index is advanced to the next length byte.
+- `if index + 4 > query.len() { return None; }`: After parsing the domain name, the query should contain the query type (2 bytes) and query class (2 bytes). This checks if there are enough bytes remaining.
+- `let query_type = u16::from_be_bytes([query[index], query[index + 1]]);`: Reads the next two bytes as a big-endian unsigned 16-bit integer, representing the query type. A value of 1 indicates an "A" record query (request for an IPv4 address).
+- `let query_class = u16::from_be_bytes([query[index + 2], query[index + 3]]);`: Reads the next two bytes as a big-endian unsigned 16-bit integer, representing the query class. A value of 1 indicates the "IN" (Internet) class.
+- `if query_type == 1 && query_class == 1 { Some(domain_parts.join(".")) } else { None }`: This checks if the query is for an "A" record in the "IN" class. If so, it joins the parts of the domain name with "." as a separator and returns it as an Option<String>. Otherwise, it returns None, indicating that this server only handles this specific type of query.
 
 ## create_response_packet Function:
 ```rust
@@ -195,26 +198,32 @@ fn create_response_packet(query: &[u8], domain: &str, ip_address: &str) -> Optio
 }
 ```
 This function takes the original query (query), the resolved domain (domain), and the corresponding IP address (ip_address) as input and constructs a DNS response packet.
-let mut response = Vec::new();: Creates an empty vector to store the bytes of the DNS response.
-Header:
-response.extend_from_slice(&query[0..2]);: Copies the 2-byte Transaction ID from the query to the response. This helps the client match the response to its original query.
-response.extend_from_slice(&DNS_RESPONSE_FLAGS.to_be_bytes());: Adds the pre-defined response flags.
-response.extend_from_slice(&query[4..6]);: Copies the 2-byte Questions Count from the query to the response.
-response.extend_from_slice(&[0x00, 0x01]);: Sets the Answer RRs Count (Resource Records) to 1, as this response will contain one IP address.
-response.extend_from_slice(&[0x00, 0x00]);: Sets the Authority RRs Count and Additional RRs Count to 0 in this simple response.
-Copy Question Section:
-This part copies the question section from the original query into the response. This is necessary for a valid DNS response.
+
+- `let mut response = Vec::new();`: Creates an empty vector to store the bytes of the DNS response.
+
+- Header:
+    - response.extend_from_slice(&query[0..2]);: Copies the 2-byte Transaction ID from the query to the response. This helps the client match the response to its original query.
+    - response.extend_from_slice(&DNS_RESPONSE_FLAGS.to_be_bytes());: Adds the pre-defined response flags.
+    - response.extend_from_slice(&query[4..6]);: Copies the 2-byte Questions Count from the query to the response.
+    - response.extend_from_slice(&[0x00, 0x01]);: Sets the Answer RRs Count (Resource Records) to 1, as this response will contain one IP address.
+    - response.extend_from_slice(&[0x00, 0x00]);: Sets the Authority RRs Count and Additional RRs Count to 0 in this simple response.
+
+- Copy Question Section: This part copies the question section from the original query into the response. This is necessary for a valid DNS response.
 It finds the end of the question section by iterating until it encounters the null terminator (0 byte) that marks the end of the domain name, and then skips the 4 bytes for the query type and class.
-response.extend_from_slice(&query[12..question_end]);: Copies the bytes of the question section.
-Answer Section:
-This section contains the actual resolved IP address.
-response.extend_from_slice(&[0xc0, 0x0c]);: This is a pointer to the domain name in the question section. 0xc0 indicates a pointer, and 0x0c (decimal 12) is the offset to the beginning of the question section in the DNS packet. This avoids repeating the full domain name in the answer.
-response.extend_from_slice(&[0x00, 0x01]);: Sets the Type to 1, indicating an "A" record (IPv4 address).
-response.extend_from_slice(&[0x00, 0x01]);: Sets the Class to 1, indicating the "IN" (Internet) class.
-response.extend_from_slice(&300_u32.to_be_bytes());: Sets the Time-to-Live (TTL) to 300 seconds. This indicates how long the client should cache this DNS record. The value is converted to big-endian bytes.
-response.extend_from_slice(&[0x00, 0x04]);: Sets the Resource Data Length (RDLength) to 4, as an IPv4 address is 4 bytes long.
-The for loop iterates through the parts of the ip_address string (separated by "."). Each part is parsed as a u8 (unsigned 8-bit integer) and pushed into the response vector. If parsing fails, the function returns None.
-Some(response): If the response packet is successfully created, it is returned as an Option<Vec<u8>>.
+
+    - response.extend_from_slice(&query[12..question_end]);: Copies the bytes of the question section.
+
+- Answer Section: This section contains the actual resolved IP address.
+
+    - response.extend_from_slice(&[0xc0, 0x0c]);: This is a pointer to the domain name in the question section. 0xc0 indicates a pointer, and 0x0c (decimal 12) is the offset to the beginning of the question section in the DNS packet. This avoids repeating the full domain name in the answer.
+    - response.extend_from_slice(&[0x00, 0x01]);: Sets the Type to 1, indicating an "A" record (IPv4 address).
+    - response.extend_from_slice(&[0x00, 0x01]);: Sets the Class to 1, indicating the "IN" (Internet) class.
+    - response.extend_from_slice(&300_u32.to_be_bytes());: Sets the Time-to-Live (TTL) to 300 seconds. This indicates how long the client should cache this DNS record. The value is converted to big-endian bytes.
+    - response.extend_from_slice(&[0x00, 0x04]);: Sets the Resource Data Length (RDLength) to 4, as an IPv4 address is 4 bytes long.
+
+- The for loop iterates through the parts of the ip_address string (separated by "."). Each part is parsed as a u8 (unsigned 8-bit integer) and pushed into the response vector. If parsing fails, the function returns None.
+
+- Some(response): If the response packet is successfully created, it is returned as an Option<Vec<u8>>.
 
 ## main Function:
 ```rust
@@ -261,22 +270,22 @@ fn main() -> Result<(), std::io::Error> {
 }
 ```
 
-fn main() -> Result<(), std::io::Error>: This is the entry point of the program. It returns a Result to indicate success or an std::io::Error if an I/O error occurs.
-let addr = "0.0.0.0:1053";: Defines the address and port on which the DNS server will listen. 0.0.0.0 means listen on all available network interfaces, and 1053 is the standard port for DNS servers. Using a port above 1024 (like 1053) typically doesn't require root privileges on Unix-like systems.
-let socket = UdpSocket::bind(addr)?;: Creates a new UDP socket and binds it to the specified address and port. The ? operator handles potential errors during binding.
-println!("DNS server listening on {}", addr);: Prints a message indicating that the server has started.
-let mut buf = [0; 512];: Creates a mutable byte array of size 512 to store incoming UDP packets. This is a common maximum size for DNS packets.
-loop { ... }: This starts an infinite loop, making the server continuously listen for incoming requests.
-match socket.recv_from(&mut buf): This attempts to receive a UDP packet from the socket and stores the received data in the buf array. It returns a Result containing the number of bytes received and the source address (src) of the sender if successful, or an error if it fails.
-Ok((amount, src)) => { ... }: If a packet is received successfully:
-println!("Received {} bytes from {}", amount, src);: Prints information about the received packet.
-let query = &buf[..amount];: Creates a slice of the buffer containing only the received data.
-if let Some(domain) = parse_query_domain(query) { ... }: Calls the parse_query_domain function to extract the domain name from the query. If successful (returns Some(domain)):
-println!("Query for domain: {}", domain);: Prints the requested domain.
-let resolved_ip = match domain.as_str() { ... };: This is the hardcoded DNS resolution logic. It checks the requested domain against a few predefined domains and assigns a corresponding IP address. If the domain doesn't match any of these, it defaults to 127.0.0.1 (localhost).
-if let Some(response_packet) = create_response_packet(query, &domain, resolved_ip) { ... }: Calls the create_response_packet function to create the DNS response packet. If successful:
-socket.send_to(&response_packet, src)?;: Sends the generated response packet back to the source address from which the query was received. The ? handles potential errors during sending.
-println!("Sent response to {}", src);: Prints a message indicating that the response has been sent.
-else { eprintln!("Failed to create response packet for {}", domain); }: If create_response_packet returns None, an error message is printed.
-else { eprintln!("Failed to parse DNS query"); }: If parse_query_domain returns None, indicating that the query couldn't be parsed or wasn't an "A" record query for the "IN" class, an error message is printed.
-Err(e) => { eprintln!("Error receiving data: {}", e); }: If an error occurs while receiving data, an error message is printed.
+- fn main() -> Result<(), std::io::Error>: This is the entry point of the program. It returns a Result to indicate success or an std::io::Error if an I/O error occurs.
+- let addr = "0.0.0.0:1053";: Defines the address and port on which the DNS server will listen. 0.0.0.0 means listen on all available network interfaces, and 1053 is the standard port for DNS servers. Using a port above 1024 (like 1053) typically doesn't require root privileges on Unix-like systems.
+- let socket = UdpSocket::bind(addr)?;: Creates a new UDP socket and binds it to the specified address and port. The ? operator handles potential errors during binding.
+- println!("DNS server listening on {}", addr);: Prints a message indicating that the server has started.
+- let mut buf = [0; 512];: Creates a mutable byte array of size 512 to store incoming UDP packets. This is a common maximum size for DNS packets.
+- loop { ... }: This starts an infinite loop, making the server continuously listen for incoming requests.
+    - match socket.recv_from(&mut buf): This attempts to receive a UDP packet from the socket and stores the received data in the buf array. It returns a Result containing the number of bytes received and the source address (src) of the sender if successful, or an error if it fails.
+        - Ok((amount, src)) => { ... }: If a packet is received successfully:
+            - println!("Received {} bytes from {}", amount, src);: Prints information about the received packet.
+            - let query = &buf[..amount];: Creates a slice of the buffer containing only the received data.
+            - if let Some(domain) = parse_query_domain(query) { ... }: Calls the parse_query_domain function to extract the domain name from the query. If successful (returns Some(domain)):
+                - println!("Query for domain: {}", domain);: Prints the requested domain.
+                - let resolved_ip = match domain.as_str() { ... };: This is the hardcoded DNS resolution logic. It checks the requested domain against a few predefined domains and assigns a corresponding IP address. If the domain doesn't match any of these, it defaults to 127.0.0.1 (localhost).
+                - if let Some(response_packet) = create_response_packet(query, &domain, resolved_ip) { ... }: Calls the create_response_packet function to create the DNS response packet. If successful:
+                    - socket.send_to(&response_packet, src)?;: Sends the generated response packet back to the source address from which the query was received. The ? handles potential errors during sending.
+                    - println!("Sent response to {}", src);: Prints a message indicating that the response has been sent.
+                - else { eprintln!("Failed to create response packet for {}", domain); }: If create_response_packet returns None, an error message is printed.
+            - else { eprintln!("Failed to parse DNS query"); }: If parse_query_domain returns None, indicating that the query couldn't be parsed or wasn't an "A" record query for the "IN" class, an error message is printed.
+        - Err(e) => { eprintln!("Error receiving data: {}", e); }: If an error occurs while receiving data, an error message is printed.

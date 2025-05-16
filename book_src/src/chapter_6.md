@@ -237,11 +237,24 @@ fn process_log_file() -> Result<(), io::Error> {
     Ok(())
 }
 
+
+fn main() -> Result<(), io::Error> {
+    match process_log_file() {
+        Ok(_) => (), // The Ok value is (), so we don't need to bind it
+        Err(err) => return Err(err), // Propagates the io::Error
+    };
+    println!("Log processing complete.");
+    Ok(())
+}
+
+/*
 fn main() -> Result<(), io::Error> {
     process_log_file()?;
     println!("Log processing complete.");
     Ok(())
 }
+*/
+
 ```
 
 
@@ -252,99 +265,11 @@ If the `Result` value is `Err`, the `?` operator will return the `Err` value fro
 
 Important: The `?` operator can only be used in functions that themselves return a `Result` or `Option` (another type we might discuss later). In the main function, you can return a `Result<(), E>` to use the `?` operator.
 
-**In our example:**
 
 `read_stardate_from_log` reads the content of a file. If `fs::read_to_string` returns an `Err`, the `?` operator will immediately return that `Err` from `read_stardate_from_log`. If it's `Ok`, the content is assigned to content.
 Similarly, in `process_log_file`, if `read_stardate_from_log` returns an `Err`, that error is propagated up.
 The main function also returns `Result<(), io::Error>`, allowing it to use the `?` operator to handle potential errors from `process_log_file`.
 
-### ![logo](Star_Trek_icon.png) Defining Custom Error Types: Creating Specific Mission Failure Reports
-
-For more complex applications, you might want to define your own custom error types to provide more specific information about the errors that can occur in your program. You can do this using enums or structs.
-
-
-```rust, editable
-#[derive(Debug)]
-enum DataProcessingError {
-    InvalidFormat,
-    MissingField(String),
-    ChecksumMismatch,
-    InvalidRange,
-}
-
-fn process_sensor_data(data: &str) -> Result<String, DataProcessingError> {
-    if !data.starts_with("SENSOR:") {
-        return Err(DataProcessingError::InvalidFormat);
-    }
-        // Split the data
-    let parts: Vec<&str> = data.split(':').collect();
-    let status = parts[1];
-    let value_part_str = parts[2]; // We'll use the third part directly now for value
-
-    // In a real scenario, we would perform more checks on status
-    if status == "ERROR" {
-         // Consider if "ERROR" status might still have a value part or if it's just an error report
-        return Err(DataProcessingError::ChecksumMismatch); // Or a more specific error type
-    }
-    // Maybe enforce that status must be "OK" if not "ERROR"?
-    if status != "OK" {
-         return Err(DataProcessingError::InvalidFormat); // Or InvalidStatus?
-    }
-
-    // --- Value Extraction, Parsing, and Validation ---
-
-    // 1. Extract the value string part after '='
-    //    Use the third part directly (parts[2]) assuming format SENSOR:STATUS:Reading=Value
-    let (_key, value_str) = value_part_str.split_once('=')
-        .ok_or(DataProcessingError::InvalidFormat)?; // Use `ok_or` and `?` for concise error handling if '=' is missing
-
-    // 2. Parse the value string into an i32
-    //    Use `parse` which returns Result, and `?` will propagate the ParseIntError
-    //    (converted via the `From` trait implementation above, or use `.map_err` explicitly)
-    let actual_num: i32 = value_str.parse()?; // '?' handles the Result<i32, ParseIntError>
-
-    // 3. --- THE FIX ---
-    //    Now `actual_num` is definitely an i32, so we can compare it directly.
-    if actual_num < 1 || actual_num > 100 {
-        return Err(DataProcessingError::InvalidRange);
-    }
-    Ok(format!("Processed: {}", data))
-}
-
-fn main() {
-    let result = process_sensor_data("SENSOR:OK:Reading=42");
-    //let result = process_sensor_data("SENSOR:OK:Reading=42");
-    //let result = process_sensor_data("SENSOR:OK:Reading=42");
-    match result {
-        Ok(output) => println!("Data processing successful: {}", output),
-        Err(error) => println!("Data processing failed: {:?}", error),
-    }
-
-    let result_fail = process_sensor_data("INVALID_DATA");
-    match result_fail {
-        Ok(output) => println!("Data processing successful: {}", output),
-        Err(error) => println!("Data processing failed: {:?}", error),
-    }
-}
-```
-
-In this example, we define an enum DataProcessingError with different variants representing specific errors that can occur during data processing. Our process_sensor_data function now returns a Result with our custom error type. This allows for more precise error handling in the main function. The #[derive(Debug)] attribute allows us to easily print the error for debugging purposes.
-The Error Trait: Standardizing Error Reporting
-
-Rust's standard library provides the std::error::Error trait, which is a trait that error types should implement to provide a standard way of working with errors. Implementing this trait allows you to access more information about an error, such as its source (if it was caused by another error). For our simple examples, deriving Debug on our custom error types is often sufficient.
-Best Practices for Error Handling: Starfleet Standard Procedures
-
-**Prefer Result for recoverable errors:**
-Use Result to signal that an operation might fail in a way that the calling code can handle.
-
-**Use `panic!` sparingly for truly unrecoverable errors:**
-Reserve `panic!` for situations where continuing execution would lead to unsafe or incorrect behavior.
-
-**Provide informative error messages:**  Whether you're using `panic!` or the `Err` variant of `Result`, make sure the error message is clear and helpful for debugging.
-
-**Handle errors explicitly:** Avoid excessive use of `unwrap()` or `expect()` in production code. Instead, use `match`, `if let`, or the `?` operator to handle errors gracefully.
-
-**Consider defining custom error types:** For complex applications, custom error types can provide more context and make error handling more precise.
 
 ### ![logo](Star_Trek_icon.png) Conclusion: Ensuring Mission Success Through Proper Error Handling
 
