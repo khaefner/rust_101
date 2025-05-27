@@ -91,7 +91,9 @@ In this example, both `warp_speed1` and `warp_speed2` are valid and hold the val
 ### ![logo](Star_Trek_icon.png) Borrowing: Temporary Access with Permissions
 
 Often, we want to access data without taking ownership of it. This is where borrowing comes in. Borrowing allows you to create references that point to a value but do not own it. Think of borrowing as granting temporary access to a Starfleet resource with specific permissions.
-References: Pointing to Starfleet Locations
+
+
+### ![logo](Star_Trek_icon.png) References: Pointing to Starfleet Locations
 
 A reference is like a pointer in other languages, but Rust guarantees that references will always point to a valid value. There are two types of references:
 
@@ -116,7 +118,7 @@ References must/will always be valid. Rust ensures that you cannot have a refere
 ### ![logo](Star_Trek_icon.png) Immutable References: Reading the Ship's Logs
 
 Let's see an example of an immutable reference:
-Rust
+
 
 ```rust, editable
 fn main() {

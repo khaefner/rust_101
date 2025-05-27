@@ -533,26 +533,6 @@ Both `play_red_alert_sound` and `initiate_self_destruct_sequence` perform an act
 
 Functions are essential for organizing your code into logical units, making it more readable, reusable, and maintainable. By defining functions for specific tasks, you can build complex programs in a structured and manageable way, much like the intricate systems and procedures that keep a Starfleet vessel operational.
 
-```rust, editable
- fn get_first_officer(crew: &[&str]) -> &str {
-    if crew.is_empty() {
-        "No officers aboard!"
-    } else {
-        crew[0] // Returns an immutable reference to the first element
-    }
-}
-
-fn main() {
-    let bridge_crew = ["Picard", "Riker", "Data", "Troi"];
-    let first = get_first_officer(&bridge_crew); // Pass a slice of the array
-    println!("The first officer is: {}", first);
-}
-```
-- `fn get_first_officer(crew: &[&str]) -> &str`: This function takes a slice crew of string slices (`&[&str]`) as input and returns an immutable reference to a string slice (`&str`). The & before the return type indicates that we are returning a reference.
-
-- `crew[0]`: Inside the function, if the slice is not empty, we return a reference to the element at index `0`. The & is implicitly added here because we are indexing into a borrowed slice.
-
-- In the main function, we create an array `bridge_crew` and pass a slice of it (`&bridge_crew`) to `get_first_officer`. The returned reference is stored in the first variable, allowing us to access the first officer's name.
 
 ### ![logo](Star_Trek_icon.png) Mission Log:
 
