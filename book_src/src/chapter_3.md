@@ -194,7 +194,7 @@ When you pass a value to a function, the ownership rules apply.
 ```rust, editable
 fn take_ownership(some_string: String) { // 'some_string' comes into scope
     println!("{} taken", some_string);
-    some_string =  "Voyager";
+    //some_string =  "Voyager";
 } // 'some_string' goes out of scope and 'drop' is called
 
 fn main() {
